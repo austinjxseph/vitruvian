@@ -43,7 +43,7 @@
                         height="20"
                         alt=""
                     />
-                    <div class="c-element_border"></div>
+                    <div class="u-border"></div>
                 </a>
                 <a href="/about" class="link u-inline-block">
                     <div>About</div>
@@ -53,7 +53,7 @@
                         height="20"
                         alt=""
                     />
-                    <div class="c-element_border"></div>
+                    <div class="u-border"></div>
                 </a>
                 <a href="#" class="link u-inline-block">
                     <div>Resume</div>
@@ -63,7 +63,7 @@
                         height="20"
                         alt=""
                     />
-                    <div class="c-element_border"></div>
+                    <div class="u-border"></div>
                 </a>
             </li>
             <li class="links is-sec">
@@ -75,7 +75,7 @@
                         height="20"
                         alt=""
                     />
-                    <div class="c-element_border"></div>
+                    <div class="u-border"></div>
                 </a>
                 <a href="#" class="link u-inline-block">
                     <div>Uses</div>
@@ -85,7 +85,7 @@
                         height="20"
                         alt=""
                     />
-                    <div class="c-element_border"></div>
+                    <div class="u-border"></div>
                 </a>
                 <a href="#" class="link u-inline-block">
                     <div>Thoughts</div>
@@ -95,7 +95,7 @@
                         height="20"
                         alt=""
                     />
-                    <div class="c-element_border"></div>
+                    <div class="u-border"></div>
                 </a>
             </li>
             <li class="links is-tert">
@@ -283,7 +283,7 @@
         display: none;
     }
 
-    .link:hover :global(.c-element_border) {
+    .link:hover :global(.u-border) {
         transform: translateY(0%);
     }
 
