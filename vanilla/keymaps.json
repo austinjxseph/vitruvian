@@ -1,0 +1,17 @@
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-tab": "agent::ToggleFocus",
+      "ctrl-e": "project_panel::ToggleFocus",
+      "ctrl-g": "git_panel::ToggleFocus",
+      "ctrl-[": "workspace::ToggleLeftDock",
+      "ctrl-]": "workspace::ToggleRightDock",
+      "ctrl-'": "workspace::ToggleBottomDock"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {}
+  }
+]

@@ -1,0 +1,158 @@
+<script>
+  export let rootPath = "/";
+  export let href = "#";
+  export let buttonText = "Button";
+  export let active = false;
+
+  $: finalHref = href.startsWith("/") ? href : rootPath + href;
+</script>
+
+<div class="button {active ? 'active' : 'active'}">
+  <div class="motion">
+    <div class="glow"></div>
+    <div class="mask">
+      <div class="cone"></div>
+    </div>
+  </div>
+  <div class="orb">
+    <div class="border"></div>
+  </div>
+  <a href={finalHref} class="wrapper u-inline-block">
+    <div class="label">
+      {buttonText}
+    </div>
+  </a>
+</div>
+
+<style>
+  .button {
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+    background-color: var(--_themes---site--bg--bg-primary);
+    color: var(--_themes---site--text--text-primary);
+    text-align: center;
+    border: 1px solid #fff3;
+    border-radius: 62.5rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    transition: all 1s;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .button.cc-text {
+    color: #3898ec;
+    background-color: #0000;
+    border: 2px solid #0000;
+  }
+
+  .button.cc-sm {
+    padding: 0.7rem 1.25rem 0.5rem;
+  }
+
+  .button.cc-lg {
+    padding: 1.25rem 2rem 1rem;
+  }
+
+  .button.cc-sec {
+    color: #3898ec;
+    -webkit-text-stroke-color: #3898ec;
+    background-color: #0000;
+    border: 2px solid #3898ec;
+  }
+
+  .button.cc-icon {
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    display: flex;
+  }
+
+  .button.active:hover {
+    background-image: radial-gradient(
+      circle closest-corner at 50% 50%,
+      var(--_themes---site--bg--bg-primary),
+      #0205084d 70%,
+      #bcbcbd33 90%,
+      #fff6
+    );
+    border-color: #fff9;
+  }
+
+  .motion {
+    opacity: 0;
+    width: 100%;
+    transition: opacity 1s;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .glow {
+    opacity: 0.12;
+    filter: blur(8px);
+  }
+
+  .mask,
+  .cone {
+    opacity: 1;
+  }
+
+  .orb {
+    opacity: 0;
+    border-radius: 62.5rem;
+    width: 100%;
+    padding: 0.06rem;
+    line-height: 100%;
+    transition: opacity 1s;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .border {
+    opacity: 1;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .wrapper {
+    z-index: 1;
+    color: #fff;
+    letter-spacing: -0.01em;
+    border-radius: 62.5rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.88rem;
+    line-height: 1.42;
+    text-decoration: none;
+    position: relative;
+  }
+
+  .label {
+    z-index: 2;
+    color: #0000;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(#fff6, #fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-weight: 500;
+    position: relative;
+  }
+
+  @media screen and (max-width: 991px) {
+    .button {
+      color: var(--_themes---site--text--text-primary);
+      font-size: var(--paragraph--font-size-m);
+    }
+  }
+</style>

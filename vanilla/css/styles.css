@@ -1,0 +1,132 @@
+body {
+    font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+    display: block;
+}
+
+video {
+    height: auto;
+}
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+ul {
+    list-style: none !important;
+}
+
+.w-richtext :first-child {
+    margin-top: 0;
+}
+.w-richtext :last-child {
+    margin-bottom: 0;
+}
+
+[hide],
+.css,
+.js {
+    display: none;
+}
+[pointer="off"] {
+    pointer-events: none;
+}
+[pointer="on"] {
+    pointer-events: auto;
+}
+[color-inherit] {
+    color: inherit;
+}
+[inline-flex] {
+    display: inline-flex;
+}
+
+[data-nav-element="menu"] {
+    z-index: 9;
+}
+
+[data-nav-state="closed"] .c-navbar_drawer {
+    pointer-events: none;
+    opacity: 0;
+    backdrop-filter: blur(0px);
+}
+
+[data-nav-state="open"] .c-navbar_drawer {
+    pointer-events: auto;
+    opacity: 1;
+    backdrop-filter: blur(40px);
+}
+
+[data-nav-state="open"] .c-navbar_overlay {
+    opacity: 100%;
+    display: block;
+}
+
+[data-nav-state="closed"] .c-navbar_overlay {
+    opacity: 0%;
+    display: none;
+}
+
+.c-navbar_link:hover .c-element_border {
+    transform: translateY(0%);
+}
+
+.c-footer_link:hover:hover .c-element_border {
+    transform: translateY(0%);
+}
+
+[data-nav-state="open"] .c-navbar_marker {
+    width: 6px;
+    background-color: #e83452;
+}
+
+@media (min-width: 1920px) {
+    .c-navbar_drawer {
+        max-width: none;
+    }
+}
+
+.s-hm_track {
+    -ms-overflow-style: none; /* Internet Explorer and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.s-hm_track {
+    -ms-overflow-style: none; /* Internet Explorer and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.s-ab_scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+.s-ab_scroll {
+    -ms-overflow-style: none; /* Internet Explorer and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.u-line-mask {
+    overflow: hidden;
+}
