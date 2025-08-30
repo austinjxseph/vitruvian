@@ -201,6 +201,36 @@
     cursor: pointer;
   }
 
+  [data-nav-element="menu"] {
+    z-index: 9;
+  }
+
+  [data-nav-state="closed"] .drawer {
+    pointer-events: none;
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+
+  [data-nav-state="open"] .drawer {
+    pointer-events: auto;
+    opacity: 1;
+    backdrop-filter: blur(40px);
+  }
+
+  [data-nav-state="open"] .overlay {
+    opacity: 100%;
+    display: block;
+  }
+
+  [data-nav-state="closed"] .overlay {
+    opacity: 0%;
+    display: none;
+  }
+
+  .link:hover .u-border {
+    transform: translateY(0%);
+  }
+
   /* Mobile Responsive */
   @media screen and (max-width: 991px) {
     .navbar {
