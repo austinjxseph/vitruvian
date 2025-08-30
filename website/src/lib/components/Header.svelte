@@ -41,20 +41,28 @@
     <ul role="list" class="drawer u-list-unstyled">
       <li class="links is-pr">
         <a href="#" class="link u-inline-block">
-          <div>Sandbox</div>
-          <div class="u-border"></div>
+          <h3>
+            <div>Sandbox</div>
+            <div class="u-border"></div>
+          </h3>
         </a>
         <a href="#" class="link u-inline-block">
-          <div>Gallery</div>
-          <div class="u-border"></div>
+          <h3>
+            <div>Gallery</div>
+            <div class="u-border"></div>
+          </h3>
         </a>
         <a href="#" class="link u-inline-block">
-          <div>About</div>
-          <div class="u-border"></div>
+          <h3>
+            <div>About</div>
+            <div class="u-border"></div>
+          </h3>
         </a>
         <a href="#" class="link u-inline-block">
-          <div>Resume</div>
-          <div class="u-border"></div>
+          <h3>
+            <div>Resume</div>
+            <div class="u-border"></div>
+          </h3>
         </a>
       </li>
       <li class="links is-sec">
