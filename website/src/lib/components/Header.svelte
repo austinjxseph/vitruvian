@@ -1,6 +1,5 @@
 <script>
   import { onMount } from "svelte";
-  import arrowIcon from "$lib/assets/icons/arrow.png";
 
   export let rootPath = "/";
 
@@ -41,31 +40,35 @@
 
     <ul role="list" class="drawer u-list-unstyled">
       <li class="links is-pr">
-        <a href={rootPath} class="link u-inline-block">
+        <a href="#" class="link u-inline-block">
           <div>Sandbox</div>
-          <img src={arrowIcon} width="20" height="20" alt="" />
           <div class="u-border"></div>
         </a>
-        <a href="{rootPath}#" class="link u-inline-block">
+        <a href="#" class="link u-inline-block">
           <div>Gallery</div>
-          <img src={arrowIcon} width="20" height="20" alt="" />
           <div class="u-border"></div>
         </a>
-        <a href="{rootPath}#" class="link u-inline-block">
-          <div>Uses</div>
-          <img src={arrowIcon} width="20" height="20" alt="" />
+        <a href="#" class="link u-inline-block">
+          <div>About</div>
           <div class="u-border"></div>
         </a>
-        <a href="{rootPath}#" class="link u-inline-block">
-          <div>Thoughts</div>
-          <img src={arrowIcon} width="20" height="20" alt="" />
+        <a href="#" class="link u-inline-block">
+          <div>Resume</div>
           <div class="u-border"></div>
         </a>
       </li>
-      <li class="links is-tert">
-        <a href="{rootPath}#" class="link is-marker u-inline-block">
-          <div>London, England</div>
-          <div class="u-text-secondary">[00:00]</div>
+      <li class="links is-sec">
+        <a href="#" class="link u-inline-block">
+          <div>Colophon</div>
+          <div class="u-border"></div>
+        </a>
+        <a href="#" class="link u-inline-block">
+          <div>Uses</div>
+          <div class="u-border"></div>
+        </a>
+        <a href="#" class="link u-inline-block">
+          <div>Thoughts</div>
+          <div class="u-border"></div>
         </a>
       </li>
     </ul>
