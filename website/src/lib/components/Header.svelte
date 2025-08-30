@@ -148,7 +148,7 @@
   .drawer {
     z-index: 4;
     padding: var(--_units---abs--6);
-    background-color: var(--_themes---site--bg--bg-secondary);
+    background-color: rgba(14, 15, 16, 0.85);
     flex-flow: column;
     justify-content: flex-end;
     align-items: flex-start;
@@ -191,6 +191,7 @@
   }
 
   .menu {
+    background-color: none;
     position: relative;
     grid-column-gap: 0.75rem;
     grid-row-gap: 0.75rem;
