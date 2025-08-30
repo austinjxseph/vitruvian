@@ -862,3 +862,26 @@ figcaption {
   grid-column-gap: 0px;
   grid-row-gap: var(--gap--xxl);
 }
+
+.s-hm_track {
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.s-hm_track {
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.s-ab_scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.s-ab_scroll {
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.u-line-mask {
+  overflow: hidden;
+}

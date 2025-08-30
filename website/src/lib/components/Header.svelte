@@ -231,7 +231,17 @@
     transform: translateY(0%);
   }
 
-  /* Mobile Responsive */
+  [data-nav-state="open"] .marker {
+    width: 6px;
+    background-color: #e83452;
+  }
+
+  @media (min-width: 1920px) {
+    .drawer {
+      max-width: none;
+    }
+  }
+
   @media screen and (max-width: 991px) {
     .navbar {
       font-size: var(--paragraph--font-size-s);
