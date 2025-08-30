@@ -1,4 +1,10 @@
 <script>
+  import mailIcon from "$lib/assets/icons/mail.png";
+  import linkedinIcon from "$lib/assets/icons/linkedin.png";
+  import readcvIcon from "$lib/assets/icons/readcv.png";
+  import blueskyIcon from "$lib/assets/icons/bluesky.png";
+  import githubIcon from "$lib/assets/icons/github.png";
+
   export let rootPath = "/";
 
   // Get current year dynamically
@@ -18,56 +24,31 @@
     <ul role="list" class="row">
       <li>
         <a href="{rootPath}#" class="link u-inline-block">
-          <img
-            src="{rootPath}images/icons/mail.png"
-            width="24"
-            height="24"
-            alt="Email"
-          />
+          <img src={mailIcon} width="24" height="24" alt="Email" />
           <div class="u-border"></div>
         </a>
       </li>
       <li>
         <a href="{rootPath}#" class="link u-inline-block">
-          <img
-            src="{rootPath}images/icons/linkedin.png"
-            width="24"
-            height="24"
-            alt="LinkedIn"
-          />
+          <img src={linkedinIcon} width="24" height="24" alt="LinkedIn" />
           <div class="u-border"></div>
         </a>
       </li>
       <li>
         <a href="{rootPath}#" class="link u-inline-block">
-          <img
-            src="{rootPath}images/icons/readcv.png"
-            width="24"
-            height="24"
-            alt="Read CV"
-          />
+          <img src={readcvIcon} width="24" height="24" alt="Read CV" />
           <div class="u-border"></div>
         </a>
       </li>
       <li>
         <a href="{rootPath}#" class="link u-inline-block">
-          <img
-            src="{rootPath}images/icons/bluesky.png"
-            width="24"
-            height="24"
-            alt="Bluesky"
-          />
+          <img src={blueskyIcon} width="24" height="24" alt="Bluesky" />
           <div class="u-border"></div>
         </a>
       </li>
       <li>
         <a href="{rootPath}#" class="link u-inline-block">
-          <img
-            src="{rootPath}images/icons/github.png"
-            width="24"
-            height="24"
-            alt="GitHub"
-          />
+          <img src={githubIcon} width="24" height="24" alt="GitHub" />
           <div class="u-border"></div>
         </a>
       </li>

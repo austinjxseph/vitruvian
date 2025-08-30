@@ -112,6 +112,7 @@ figcaption {
 }
 
 .page {
+  position: relative;
   overscroll-behavior-y: none;
   flex-direction: column;
   align-self: stretch;

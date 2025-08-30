@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import arrowIcon from "$lib/assets/icons/arrow.png";
 
   export let rootPath = "/";
 
@@ -42,42 +43,22 @@
       <li class="links is-pr">
         <a href={rootPath} class="link u-inline-block">
           <div>Sandbox</div>
-          <img
-            src="{rootPath}images/icons/arrow.png"
-            width="20"
-            height="20"
-            alt=""
-          />
+          <img src={arrowIcon} width="20" height="20" alt="" />
           <div class="u-border"></div>
         </a>
         <a href="{rootPath}#" class="link u-inline-block">
           <div>Gallery</div>
-          <img
-            src="{rootPath}images/icons/arrow.png"
-            width="20"
-            height="20"
-            alt=""
-          />
+          <img src={arrowIcon} width="20" height="20" alt="" />
           <div class="u-border"></div>
         </a>
         <a href="{rootPath}#" class="link u-inline-block">
           <div>Uses</div>
-          <img
-            src="{rootPath}images/icons/arrow.png"
-            width="20"
-            height="20"
-            alt=""
-          />
+          <img src={arrowIcon} width="20" height="20" alt="" />
           <div class="u-border"></div>
         </a>
         <a href="{rootPath}#" class="link u-inline-block">
           <div>Thoughts</div>
-          <img
-            src="{rootPath}images/icons/arrow.png"
-            width="20"
-            height="20"
-            alt=""
-          />
+          <img src={arrowIcon} width="20" height="20" alt="" />
           <div class="u-border"></div>
         </a>
       </li>
