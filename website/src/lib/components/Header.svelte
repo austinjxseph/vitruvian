@@ -56,15 +56,12 @@
       <li class="links is-sec">
         <a href="#" class="link u-inline-block">
           <h3>Colophon</h3>
-          <div class="u-border"></div>
         </a>
         <a href="#" class="link u-inline-block">
           <h3>Uses</h3>
-          <div class="u-border"></div>
         </a>
         <a href="#" class="link u-inline-block">
           <h3>Thoughts</h3>
-          <div class="u-border"></div>
         </a>
       </li>
     </ul>
@@ -190,7 +187,7 @@
   }
 
   .menu {
-    background-color: none;
+    background-color: transparent;
     position: relative;
     grid-column-gap: 0.75rem;
     grid-row-gap: 0.75rem;
