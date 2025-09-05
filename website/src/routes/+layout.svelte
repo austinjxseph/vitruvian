@@ -1,4 +1,5 @@
 <script>
+  import { page } from "$app/stores";
   import "../lib/styles/variables.css";
   import "../lib/styles/normalize.css";
   import "../lib/styles/styles.css";
@@ -14,5 +15,5 @@
   <main class="u-layout-vflex main">
     <slot />
   </main>
-  <Footer />
+  <Footer fixed={$page.url.pathname === "/"} />
 </div>

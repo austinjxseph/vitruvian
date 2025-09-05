@@ -6,12 +6,13 @@
   import githubIcon from "$lib/assets/icons/github.png";
 
   export let rootPath = "/";
+  export let fixed = false;
 
   // Get current year dynamically
   const currentYear = new Date().getFullYear();
 </script>
 
-<footer class="u-layout-vflex component">
+<footer class="u-layout-vflex component" class:fixed>
   <div class="u-layout-vflex inner">
     <div class="u-layout-hflex row copyright">
       <div class="u-layout-vflex u-text-secondary">
@@ -65,6 +66,14 @@
     align-items: flex-start;
     display: flex;
     position: relative;
+  }
+
+  .fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
   }
 
   .inner {

@@ -135,6 +135,10 @@ figcaption {
 }
 
 .body {
+  font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-family: var(--typeface--primary);
   color: var(--_themes---site--text--text-primary);
   flex-direction: column;

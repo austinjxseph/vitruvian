@@ -85,6 +85,11 @@
     border-color: #fff9;
   }
 
+  .active .motion,
+  .active .orb {
+    opacity: 1;
+  }
+
   .motion {
     opacity: 0;
     width: 100%;
@@ -93,16 +98,55 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .motion * {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
   }
 
   .glow {
     opacity: 0.12;
     filter: blur(8px);
+    animation: borderTurn 2.5s infinite linear;
+    background-image: conic-gradient(
+      from 0 at 50% 50%,
+      rgba(255, 255, 255, 0.5) 0deg,
+      rgba(255, 255, 255, 0) 60deg,
+      rgba(255, 255, 255, 0) 310deg,
+      rgba(255, 255, 255, 0.5) 360deg
+    );
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
-  .mask,
+  .mask {
+    opacity: 1;
+    -webkit-mask: url("data:image/svg+xml,url('data:image/svg+xml,%253Csvg width='28' height='24' viewBox='0 0 28 24' fill='none' xmlns='http://www.w3.org/2000/svg'%253E%253Crect width='28' height='24' fill='black'/%253E%253C/svg%253E%250A');");
+    mask: url("data:image/svg+xml,url('data:image/svg+xml,%253Csvg width='28' height='24' viewBox='0 0 28 24' fill='none' xmlns='http://www.w3.org/2000/svg'%253E%253Crect width='28' height='24' fill='black'/%253E%253C/svg%253E%250A');");
+    mask-repeat: repeat;
+    -webkit-mask-size: auto;
+    mask-size: auto;
+  }
+
   .cone {
     opacity: 1;
+    animation: borderTurn 2.5s infinite linear;
+    background-image: conic-gradient(
+      from 0 at 50% 50%,
+      rgba(255, 255, 255, 0.5) 0deg,
+      rgba(255, 255, 255, 0) 60deg,
+      rgba(255, 255, 255, 0) 310deg,
+      rgba(255, 255, 255, 0.5) 360deg
+    );
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
   .orb {
@@ -115,6 +159,18 @@
     position: absolute;
     top: 0;
     left: 0;
+    content: "";
+    inset: 0;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
   }
 
   .border {
@@ -124,6 +180,31 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    animation: borderTurnWithTranslate 2.5s infinite linear;
+    background-image: conic-gradient(
+      from 0 at 50% 50%,
+      rgba(255, 255, 255, 0.5) 0deg,
+      rgba(255, 255, 255, 0) 60deg,
+      rgba(255, 255, 255, 0) 310deg,
+      rgba(255, 255, 255, 0.5) 360deg
+    );
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .motion:before,
+  .border:before {
+    content: "";
+    float: left;
+    padding-top: 100%;
+  }
+
+  .motion:after,
+  .border:after {
+    clear: both;
+    content: "";
+    display: block;
   }
 
   .wrapper {
@@ -153,6 +234,26 @@
     .button {
       color: var(--_themes---site--text--text-primary);
       font-size: var(--paragraph--font-size-m);
+    }
+  }
+
+  @keyframes borderTurn {
+    0% {
+      transform: rotate(0);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes borderTurnWithTranslate {
+    0% {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
     }
   }
 </style>

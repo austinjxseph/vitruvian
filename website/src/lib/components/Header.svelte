@@ -142,19 +142,21 @@
   }
 
   .drawer {
-    z-index: 4;
-    padding: var(--_units---abs--6);
-    background-color: rgba(14, 15, 16, 0.85);
-    flex-flow: column;
-    justify-content: flex-end;
-    align-items: flex-start;
-    width: 20vw;
-    max-width: 300px;
-    height: 100dvh;
-    transition: transform 0.3s;
-    display: flex;
     position: absolute;
-    inset: 0% auto 0% 0%;
+    inset: 0% 0% 0% 0%;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap--xxl);
+    justify-content: center;
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding: var(--global--margin);
+    transition:
+      transform 0.3s,
+      opacity 0.3s,
+      backdrop-filter 0.3s;
   }
 
   .marker {
@@ -173,7 +175,6 @@
     flex-flow: column;
     justify-content: flex-start;
     align-items: flex-start;
-    margin-top: 96px;
     display: flex;
   }
 
