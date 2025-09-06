@@ -1,5 +1,9 @@
 <svelte:head>
   <title>About</title>
+  <meta
+    name="description"
+    content="I'm a software designer & creative developer currently in London, with a strong focus on Visual & Motion Design."
+  />
   <script
     src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=67a7f3d67329e4f8c06e55ab"
     type="text/javascript"
