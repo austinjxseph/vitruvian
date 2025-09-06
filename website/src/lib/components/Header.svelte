@@ -30,11 +30,7 @@
       on:click={toggleNavigation}
     ></button>
 
-    <a
-      href="{rootPath}index.html"
-      aria-label="Go Back Home"
-      class="logo u-inline-block"
-    >
+    <a href={rootPath} aria-label="Go Back Home" class="logo u-inline-block">
       Austin Joseph
     </a>
 
