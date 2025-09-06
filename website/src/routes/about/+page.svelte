@@ -28,21 +28,7 @@
       <div class="u-layout-hflex s-ab_inner gap-xxl">
         <div class="u-layout-vflex s-ab_div">
           <div class="u-layout-vflex s-ab_img">
-            <img
-              src="/images/splash.png"
-              loading="lazy"
-              sizes="(max-width: 479px) 99vw, 100vw"
-              srcset="
-                                /images/splash-p-500.png   500w,
-                                /images/splash-p-800.png   800w,
-                                /images/splash-p-1080.png 1080w,
-                                /images/splash-p-1600.png 1600w,
-                                /images/splash-p-2000.png 2000w,
-                                /images/splash-p-2600.png 2600w,
-                                /images/splash.png        2656w
-                            "
-              alt=""
-            />
+            <img src="/images/splash.png" loading="lazy" alt="" />
           </div>
           <div class="u-layout-vflex s-ab_heading">
             <h1>
