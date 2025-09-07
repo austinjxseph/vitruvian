@@ -44,7 +44,7 @@
                 <span class="u-font-accent">Garamond</span>
                 lover and passionate Times New Roman hater.
               </h1>
-              <Button active={true} buttonText="View Resume" />
+              <Button active={true} buttonText="Information" />
             </div>
           </div>
         </div>
