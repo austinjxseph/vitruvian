@@ -141,7 +141,557 @@ interface PageDocumentData {
 export type PageDocument<Lang extends string = string> =
   prismic.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
 
-export type AllDocumentTypes = PageDocument;
+/**
+ * Item in *Project → Tags*
+ */
+export interface ProjectDocumentDataTagsItem {
+  /**
+   * Project Tags field in *Project → Tags*
+   *
+   * - **Field Type**: Select
+   * - **Placeholder**: Select tags from the dropdown below
+   * - **API ID Path**: project.tags[].project_tags
+   * - **Documentation**: https://prismic.io/docs/fields/select
+   */
+  project_tags: prismic.SelectField<
+    | "Web Design"
+    | "Branding & Identity"
+    | "Front-end Development"
+    | "Product Design"
+    | "Social Media"
+    | "DevOps"
+  >;
+}
+
+/**
+ * Item in *Project → Project Metadata*
+ */
+export interface ProjectDocumentDataProjectMetadataItem {
+  /**
+   * Label field in *Project → Project Metadata*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Add metadata label here
+   * - **API ID Path**: project.project_metadata[].metadata_label
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  metadata_label: prismic.KeyTextField;
+
+  /**
+   * Value field in *Project → Project Metadata*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Add metadata content here
+   * - **API ID Path**: project.project_metadata[].metadata_content
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  metadata_content: prismic.KeyTextField;
+}
+
+type ProjectDocumentDataSlices2Slice =
+  | ArticleHeaderSlice
+  | ImageBlockSlice
+  | NumberedGridSlice
+  | TextBlockSlice
+  | FullWidthImageSlice;
+
+/**
+ * Content for Project documents
+ */
+interface ProjectDocumentData {
+  /**
+   * Project Index field in *Project*
+   *
+   * - **Field Type**: Number
+   * - **Placeholder**: Add an optional index to rank entries by priority
+   * - **API ID Path**: project.project_index
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/number
+   */
+  project_index: prismic.NumberField;
+
+  /**
+   * Project Name field in *Project*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Add name here
+   * - **API ID Path**: project.project_name
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  project_name: prismic.KeyTextField;
+
+  /**
+   * Project Title field in *Project*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Main project headline - appears in article header and meta tags
+   * - **API ID Path**: project.project_title
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  project_title: prismic.KeyTextField;
+
+  /**
+   * Tags field in *Project*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: project.tags[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  tags: prismic.GroupField<Simplify<ProjectDocumentDataTagsItem>>;
+
+  /**
+   * Project Description field in *Project*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Long-form project overview - appears below title in article header
+   * - **API ID Path**: project.project_description
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  project_description: prismic.RichTextField;
+
+  /**
+   * Showcase? field in *Project*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: true
+   * - **API ID Path**: project.showcase
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  showcase: prismic.BooleanField;
+
+  /**
+   * Thumbnail Base field in *Project*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: project.thumbnail_base
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  thumbnail_base: prismic.ImageField<never>;
+
+  /**
+   * Thumbnail Overlay field in *Project*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: project.thumbnail_overlay
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  thumbnail_overlay: prismic.ImageField<never>;
+
+  /**
+   * Published field in *Project*
+   *
+   * - **Field Type**: Date
+   * - **Placeholder**: Project completion or publish date
+   * - **API ID Path**: project.published
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/date
+   */
+  published: prismic.DateField /**
+   * Project Metadata field in *Project*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: project.project_metadata[]
+   * - **Tab**: Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */;
+  project_metadata: prismic.GroupField<
+    Simplify<ProjectDocumentDataProjectMetadataItem>
+  > /**
+   * Slice Zone field in *Project*
+   *
+   * - **Field Type**: Slice Zone
+   * - **Placeholder**: *None*
+   * - **API ID Path**: project.slices2[]
+   * - **Tab**: Content
+   * - **Documentation**: https://prismic.io/docs/slices
+   */;
+  slices2: prismic.SliceZone<ProjectDocumentDataSlices2Slice> /**
+   * Meta Title field in *Project*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: SEO title for search engines (50-60 characters)
+   * - **API ID Path**: project.meta_title
+   * - **Tab**: Search-Engine Optimisation
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */;
+  meta_title: prismic.KeyTextField;
+
+  /**
+   * Meta Description field in *Project*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: SEO description for search engines (150-160 characters).
+   * - **API ID Path**: project.meta_description
+   * - **Tab**: Search-Engine Optimisation
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_description: prismic.KeyTextField;
+
+  /**
+   * Social Share Image field in *Project*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: project.meta_image
+   * - **Tab**: Search-Engine Optimisation
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  meta_image: prismic.ImageField<never>;
+}
+
+/**
+ * Project document from Prismic
+ *
+ * - **API ID**: `project`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type ProjectDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<
+    Simplify<ProjectDocumentData>,
+    "project",
+    Lang
+  >;
+
+export type AllDocumentTypes = PageDocument | ProjectDocument;
+
+/**
+ * Primary content in *ArticleHeader → Default → Primary*
+ */
+export interface ArticleHeaderSliceDefaultPrimary {
+  /**
+   * Title field in *ArticleHeader → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Project title - displays as main heading in article header
+   * - **API ID Path**: article_header.default.primary.title
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  title: prismic.KeyTextField;
+
+  /**
+   * Description field in *ArticleHeader → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Long-form project description - supports bold, italic, and links
+   * - **API ID Path**: article_header.default.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+}
+
+/**
+ * Default variation for ArticleHeader Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ArticleHeaderSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<ArticleHeaderSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *ArticleHeader*
+ */
+type ArticleHeaderSliceVariation = ArticleHeaderSliceDefault;
+
+/**
+ * ArticleHeader Shared Slice
+ *
+ * - **API ID**: `article_header`
+ * - **Description**: Project/article title and description header
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ArticleHeaderSlice = prismic.SharedSlice<
+  "article_header",
+  ArticleHeaderSliceVariation
+>;
+
+/**
+ * Primary content in *FullWidthImage → Default → Primary*
+ */
+export interface FullWidthImageSliceDefaultPrimary {
+  /**
+   * Image field in *FullWidthImage → Default → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: full_width_image.default.primary.image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * Caption (optional) field in *FullWidthImage → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Image caption or description
+   * - **API ID Path**: full_width_image.default.primary.caption
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  caption: prismic.KeyTextField;
+}
+
+/**
+ * Default variation for FullWidthImage Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type FullWidthImageSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<FullWidthImageSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *FullWidthImage*
+ */
+type FullWidthImageSliceVariation = FullWidthImageSliceDefault;
+
+/**
+ * FullWidthImage Shared Slice
+ *
+ * - **API ID**: `full_width_image`
+ * - **Description**: Full-width hero image
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type FullWidthImageSlice = prismic.SharedSlice<
+  "full_width_image",
+  FullWidthImageSliceVariation
+>;
+
+/**
+ * Primary content in *ImageBlock → Default → Primary*
+ */
+export interface ImageBlockSliceDefaultPrimary {
+  /**
+   * Number of Columns field in *ImageBlock → Default → Primary*
+   *
+   * - **Field Type**: Select
+   * - **Placeholder**: *None*
+   * - **Default Value**: 1
+   * - **API ID Path**: image_block.default.primary.columns
+   * - **Documentation**: https://prismic.io/docs/fields/select
+   */
+  columns: prismic.SelectField<"1" | "2" | "3" | "4", "filled">;
+}
+
+/**
+ * Primary content in *ImageBlock → Items*
+ */
+export interface ImageBlockSliceDefaultItem {
+  /**
+   * Image field in *ImageBlock → Items*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: image_block.items[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * Caption (optional) field in *ImageBlock → Items*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Image caption or description
+   * - **API ID Path**: image_block.items[].caption
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  caption: prismic.KeyTextField;
+}
+
+/**
+ * Default variation for ImageBlock Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ImageBlockSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<ImageBlockSliceDefaultPrimary>,
+  Simplify<ImageBlockSliceDefaultItem>
+>;
+
+/**
+ * Slice variation for *ImageBlock*
+ */
+type ImageBlockSliceVariation = ImageBlockSliceDefault;
+
+/**
+ * ImageBlock Shared Slice
+ *
+ * - **API ID**: `image_block`
+ * - **Description**: Flexible multi-column image grid
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ImageBlockSlice = prismic.SharedSlice<
+  "image_block",
+  ImageBlockSliceVariation
+>;
+
+/**
+ * Primary content in *NumberedGrid → Default → Primary*
+ */
+export interface NumberedGridSliceDefaultPrimary {
+  /**
+   * Number of Columns field in *NumberedGrid → Default → Primary*
+   *
+   * - **Field Type**: Select
+   * - **Placeholder**: *None*
+   * - **Default Value**: 4
+   * - **API ID Path**: numbered_grid.default.primary.columns
+   * - **Documentation**: https://prismic.io/docs/fields/select
+   */
+  columns: prismic.SelectField<"2" | "3" | "4", "filled">;
+
+  /**
+   * Show Numbered Headings field in *NumberedGrid → Default → Primary*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: true
+   * - **API ID Path**: numbered_grid.default.primary.show_numbers
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  show_numbers: prismic.BooleanField;
+}
+
+/**
+ * Primary content in *NumberedGrid → Items*
+ */
+export interface NumberedGridSliceDefaultItem {
+  /**
+   * Custom Heading (optional) field in *NumberedGrid → Items*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Only used if 'Show Numbered Headings' is off
+   * - **API ID Path**: numbered_grid.items[].heading
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  heading: prismic.KeyTextField;
+
+  /**
+   * Description field in *NumberedGrid → Items*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Enter description text...
+   * - **API ID Path**: numbered_grid.items[].description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+}
+
+/**
+ * Default variation for NumberedGrid Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type NumberedGridSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<NumberedGridSliceDefaultPrimary>,
+  Simplify<NumberedGridSliceDefaultItem>
+>;
+
+/**
+ * Slice variation for *NumberedGrid*
+ */
+type NumberedGridSliceVariation = NumberedGridSliceDefault;
+
+/**
+ * NumberedGrid Shared Slice
+ *
+ * - **API ID**: `numbered_grid`
+ * - **Description**: Flexible numbered grid with auto-numbering
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type NumberedGridSlice = prismic.SharedSlice<
+  "numbered_grid",
+  NumberedGridSliceVariation
+>;
+
+/**
+ * Primary content in *TextBlock → Default → Primary*
+ */
+export interface TextBlockSliceDefaultPrimary {
+  /**
+   * Number of Columns field in *TextBlock → Default → Primary*
+   *
+   * - **Field Type**: Select
+   * - **Placeholder**: *None*
+   * - **Default Value**: 2
+   * - **API ID Path**: text_block.default.primary.columns
+   * - **Documentation**: https://prismic.io/docs/fields/select
+   */
+  columns: prismic.SelectField<"1" | "2" | "3" | "4", "filled">;
+}
+
+/**
+ * Primary content in *TextBlock → Items*
+ */
+export interface TextBlockSliceDefaultItem {
+  /**
+   * Text Content field in *TextBlock → Items*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Enter your text content here...
+   * - **API ID Path**: text_block.items[].content
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  content: prismic.RichTextField;
+}
+
+/**
+ * Default variation for TextBlock Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type TextBlockSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<TextBlockSliceDefaultPrimary>,
+  Simplify<TextBlockSliceDefaultItem>
+>;
+
+/**
+ * Slice variation for *TextBlock*
+ */
+type TextBlockSliceVariation = TextBlockSliceDefault;
+
+/**
+ * TextBlock Shared Slice
+ *
+ * - **API ID**: `text_block`
+ * - **Description**: Flexible multi-column text content
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type TextBlockSlice = prismic.SharedSlice<
+  "text_block",
+  TextBlockSliceVariation
+>;
 
 declare module "@prismicio/client" {
   interface CreateClient {
@@ -167,7 +717,35 @@ declare module "@prismicio/client" {
       PageDocument,
       PageDocumentData,
       PageDocumentDataSlicesSlice,
+      ProjectDocument,
+      ProjectDocumentData,
+      ProjectDocumentDataTagsItem,
+      ProjectDocumentDataProjectMetadataItem,
+      ProjectDocumentDataSlices2Slice,
       AllDocumentTypes,
+      ArticleHeaderSlice,
+      ArticleHeaderSliceDefaultPrimary,
+      ArticleHeaderSliceVariation,
+      ArticleHeaderSliceDefault,
+      FullWidthImageSlice,
+      FullWidthImageSliceDefaultPrimary,
+      FullWidthImageSliceVariation,
+      FullWidthImageSliceDefault,
+      ImageBlockSlice,
+      ImageBlockSliceDefaultPrimary,
+      ImageBlockSliceDefaultItem,
+      ImageBlockSliceVariation,
+      ImageBlockSliceDefault,
+      NumberedGridSlice,
+      NumberedGridSliceDefaultPrimary,
+      NumberedGridSliceDefaultItem,
+      NumberedGridSliceVariation,
+      NumberedGridSliceDefault,
+      TextBlockSlice,
+      TextBlockSliceDefaultPrimary,
+      TextBlockSliceDefaultItem,
+      TextBlockSliceVariation,
+      TextBlockSliceDefault,
     };
   }
 }

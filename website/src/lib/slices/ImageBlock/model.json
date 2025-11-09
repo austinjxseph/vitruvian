@@ -1,0 +1,46 @@
+{
+  "id": "image_block",
+  "type": "SharedSlice",
+  "name": "ImageBlock",
+  "description": "Flexible multi-column image grid",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "columns": {
+          "type": "Select",
+          "config": {
+            "label": "Number of Columns",
+            "placeholder": "",
+            "options": ["1", "2", "3", "4"],
+            "default_value": "1"
+          }
+        }
+      },
+      "items": {
+        "image": {
+          "type": "Image",
+          "config": {
+            "label": "Image",
+            "constraint": {
+              "width": 1600
+            },
+            "thumbnails": []
+          }
+        },
+        "caption": {
+          "type": "Text",
+          "config": {
+            "label": "Caption (optional)",
+            "placeholder": "Image caption or description"
+          }
+        }
+      }
+    }
+  ]
+}
