@@ -1,39 +1,23 @@
 @font-face {
-  font-family: "Saans";
-  src: url("/fonts/Saans-Regular.ttf") format("truetype");
+  font-family: "Inter Display";
+  src: url("/fonts/InterDisplay-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Saans";
-  src: url("/fonts/Saans-Medium.ttf") format("truetype");
+  font-family: "Inter Display";
+  src: url("/fonts/InterDisplay-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Saans";
-  src: url("/fonts/Saans-Bold.ttf") format("truetype");
+  font-family: "Inter Display";
+  src: url("/fonts/InterDisplay-Bold.ttf") format("truetype");
   font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saans Mono";
-  src: url("/fonts/SaansMono-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saans Mono";
-  src: url("/fonts/SaansMono-Medium.ttf") format("truetype");
-  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
@@ -63,7 +47,7 @@
 }
 
 :root {
-  --typeface--primary: Saans, Arial, sans-serif;
+  --typeface--primary: "Inter Display", Arial, sans-serif;
   --typeface--secondary: "EB Garamond Italic", Georgia, serif;
   --typeface--tertiary: "EB Garamond Italic", Georgia, serif;
 
@@ -257,7 +241,7 @@ body {
   margin-right: auto;
   font-weight: 400;
 
-  --typeface--primary: Saans, Arial, sans-serif;
+  --typeface--primary: "Inter Display", Arial, sans-serif;
   --typeface--secondary: "EB Garamond Italic", Georgia, serif;
   --typeface--tertiary: "EB Garamond Italic", Georgia, serif;
 
@@ -322,7 +306,7 @@ body {
 
 @media screen and (max-width: 479px) {
   body {
-    --typeface--primary: Saans, Arial, sans-serif;
+    --typeface--primary: "Inter Display", Arial, sans-serif;
     --typeface--secondary: "EB Garamond Italic", Georgia, serif;
     --typeface--tertiary: "EB Garamond Italic", Georgia, serif;
 

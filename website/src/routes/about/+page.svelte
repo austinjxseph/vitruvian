@@ -1,29 +1,46 @@
-<script>
-  import Bio from "$lib/components/pages/Bio.svelte";
+<script lang="ts">
+  import { SliceZone } from "@prismicio/svelte";
+  import { components } from "$lib/slices";
+
+  export let data;
+  const { page } = data;
 </script>
 
 <svelte:head>
-  <title>About</title>
+  <title>{page.data.meta_title || "About | Austin Joseph"}</title>
   <meta
     name="description"
-    content="I'm a software designer & creative developer currently in London, with a strong focus on Visual & Motion Design."
+    content={page.data.meta_description ||
+      "I'm a software designer & creative developer currently in London, with a strong focus on Visual & Motion Design."}
   />
-  <script
-    src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=67a7f3d67329e4f8c06e55ab"
-    type="text/javascript"
-    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
-  ></script>
-  <script src="https://unpkg.com/split-type@0.3.4/umd/index.min.js"></script>
-  <script src="/js/script.js"></script>
-  <script src="/js/ix.js"></script>
-  <script src="/js/motion.js"></script>
+  {#if page.data.meta_image?.url}
+    <meta property="og:image" content={page.data.meta_image.url} />
+    <meta property="twitter:image" content={page.data.meta_image.url} />
+  {/if}
+  <meta property="og:title" content={page.data.meta_title || "About | Austin Joseph"} />
+  <meta
+    property="og:description"
+    content={page.data.meta_description ||
+      "I'm a software designer & creative developer currently in London, with a strong focus on Visual & Motion Design."}
+  />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
 </svelte:head>
 
-<Bio />
+<main class="u-layout-vflex main">
+  <div class="u-layout-vflex inner">
+    <div class="u-layout-vflex body">
+      <SliceZone slices={page.data.slices} {components} />
+    </div>
+  </div>
+</main>
+
+<style>
+  .inner {
+    align-self: stretch;
+  }
+
+  .body {
+    align-self: stretch;
+  }
+</style>
