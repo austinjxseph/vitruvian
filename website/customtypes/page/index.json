@@ -27,7 +27,7 @@
         "fieldset": "Slice Zone",
         "config": {
           "choices": {
-            "bio": {
+            "static_bio_block": {
               "type": "SharedSlice"
             }
           }

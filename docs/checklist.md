@@ -3,6 +3,7 @@
 ## Tasks
 
 ### Prismic Content Model Changes
+- [ ] **[C2]** Migrate existing document slice IDs to match new Slice Machine models
 - [ ] **[C1]** Create new Prismic object for global elements (header and footer, with nested links)
 - [ ] **[C2]** Create new Prismic object and slice for preloader component (with WebGL for 3D render based on static objects)
 - [ ] **[C0]** Create new slice for Bio (About page)

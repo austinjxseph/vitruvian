@@ -1,7 +1,7 @@
 {
-  "id": "full_width_image",
+  "id": "article_full_bleed",
   "type": "SharedSlice",
-  "name": "FullWidthImage",
+  "name": "ArticleFullBleed",
   "description": "Full-width hero image",
   "variations": [
     {

@@ -1,8 +1,8 @@
 {
-  "id": "image_block",
+  "id": "article_text_block",
   "type": "SharedSlice",
-  "name": "ImageBlock",
-  "description": "Flexible multi-column image grid",
+  "name": "ArticleTextBlock",
+  "description": "Flexible multi-column text content",
   "variations": [
     {
       "id": "default",
@@ -18,26 +18,18 @@
             "label": "Number of Columns",
             "placeholder": "",
             "options": ["1", "2", "3", "4"],
-            "default_value": "1"
+            "default_value": "2"
           }
         }
       },
       "items": {
-        "image": {
-          "type": "Image",
+        "content": {
+          "type": "StructuredText",
           "config": {
-            "label": "Image",
-            "constraint": {
-              "width": 1600
-            },
-            "thumbnails": []
-          }
-        },
-        "caption": {
-          "type": "Text",
-          "config": {
-            "label": "Caption (optional)",
-            "placeholder": "Image caption or description"
+            "label": "Text Content",
+            "placeholder": "Enter your text content here...",
+            "allowTargetBlank": true,
+            "single": "paragraph, strong, em, hyperlink"
           }
         }
       }

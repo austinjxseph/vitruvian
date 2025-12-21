@@ -19,6 +19,7 @@
   // Group items by section (header starts a new group)
   type ItemGroup = {
     heading: string;
+    description: any;
     rows: typeof items;
   };
 
@@ -33,6 +34,7 @@
         }
         currentGroup = {
           heading: item.item_heading || "",
+          description: item.item_description || null,
           rows: []
         };
       } else if (item.item_type === "row" && currentGroup) {
@@ -85,6 +87,11 @@
         {#each groupedItems as group}
           <div class="u-layout-vflex section-block">
             <h3 class="u-font-accent section-heading">{group.heading}</h3>
+            {#if group.description && group.description.length > 0}
+              <div class="section-description">
+                <PrismicRichText field={group.description} />
+              </div>
+            {/if}
             {#each group.rows as row}
               <div class="u-layout-vflex cell">
                 <div class="u-layout-vflex cell-header">
@@ -257,6 +264,14 @@
     text-shadow: 4px 4px 60px black;
     font-weight: 400;
     font-style: normal;
+  }
+
+  .section-description :global(p) {
+    font-family: var(--typeface--primary);
+    font-size: var(--paragraph--font-size-s);
+    line-height: var(--paragraph--line-height-s);
+    letter-spacing: var(--paragraph--letter-spacing);
+    color: var(--_themes---site--text--text-primary);
   }
 
   .cell {

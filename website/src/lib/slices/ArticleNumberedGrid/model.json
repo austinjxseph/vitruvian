@@ -1,7 +1,7 @@
 {
-  "id": "numbered_grid",
+  "id": "article_numbered_grid",
   "type": "SharedSlice",
-  "name": "NumberedGrid",
+  "name": "ArticleNumberedGrid",
   "description": "Flexible numbered grid with auto-numbering",
   "variations": [
     {

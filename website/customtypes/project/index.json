@@ -139,16 +139,16 @@
             "article_header": {
               "type": "SharedSlice"
             },
-            "image_block": {
+            "article_image_block": {
               "type": "SharedSlice"
             },
-            "numbered_grid": {
+            "article_numbered_grid": {
               "type": "SharedSlice"
             },
-            "text_block": {
+            "article_text_block": {
               "type": "SharedSlice"
             },
-            "full_width_image": {
+            "article_full_bleed": {
               "type": "SharedSlice"
             }
           }

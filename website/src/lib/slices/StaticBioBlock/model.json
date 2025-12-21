@@ -1,7 +1,7 @@
 {
-  "id": "bio",
+  "id": "static_bio_block",
   "type": "SharedSlice",
-  "name": "Bio",
+  "name": "StaticBioBlock",
   "description": "Bio section with staggered images, intro, and flexible content sections",
   "variations": [
     {
@@ -63,29 +63,29 @@
               "item_heading": {
                 "type": "Text",
                 "config": {
-                  "label": "Item Heading",
-                  "placeholder": "Section title or row heading"
+                  "label": "Heading",
+                  "placeholder": "Header: section title | Row: job title, degree, etc."
                 }
               },
               "item_subtitle": {
                 "type": "Text",
                 "config": {
-                  "label": "Item Subtitle",
-                  "placeholder": "Secondary text (period, institution, etc.)"
+                  "label": "Subtitle (row only)",
+                  "placeholder": "Row only: period, institution, etc."
                 }
               },
               "item_index": {
                 "type": "Text",
                 "config": {
-                  "label": "Item Index",
-                  "placeholder": "Optional (e.g., years: 2022-2023)"
+                  "label": "Index (row only)",
+                  "placeholder": "Row only: years (e.g., 2022-2023)"
                 }
               },
               "item_description": {
                 "type": "StructuredText",
                 "config": {
-                  "label": "Item Description",
-                  "placeholder": "Optional description text...",
+                  "label": "Description",
+                  "placeholder": "Header: optional intro | Row: job description, etc.",
                   "allowTargetBlank": true,
                   "single": "paragraph,em,strong,hyperlink"
                 }
