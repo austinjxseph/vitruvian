@@ -12,7 +12,10 @@
 
   export let slice;
 
-  const primary = slice.primary;
+  // Debug logging
+  console.log("StaticBioBlock slice data:", slice);
+
+  const primary = slice?.primary || {};
   const images = primary.bio_images || [];
   const items = primary.bio_items || [];
 
@@ -35,7 +38,7 @@
         currentGroup = {
           heading: item.item_heading || "",
           description: item.item_description || null,
-          rows: []
+          rows: [],
         };
       } else if (item.item_type === "row" && currentGroup) {
         currentGroup.rows.push(item);

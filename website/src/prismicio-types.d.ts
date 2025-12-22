@@ -69,7 +69,7 @@ type ContentRelationshipFieldWithData<
   >;
 }[Exclude<TCustomType[number], string>["id"]];
 
-type PageDocumentDataSlicesSlice = never;
+type PageDocumentDataSlicesSlice = StaticBioBlockSlice;
 
 /**
  * Content for Page documents
@@ -190,10 +190,10 @@ export interface ProjectDocumentDataProjectMetadataItem {
 
 type ProjectDocumentDataSlices2Slice =
   | ArticleHeaderSlice
-  | ImageBlockSlice
-  | NumberedGridSlice
-  | TextBlockSlice
-  | FullWidthImageSlice;
+  | ArticleImageBlockSlice
+  | ArticleNumberedGridSlice
+  | ArticleTextBlockSlice
+  | ArticleFullBleedSlice;
 
 /**
  * Content for Project documents
@@ -693,6 +693,56 @@ export type TextBlockSlice = prismic.SharedSlice<
   TextBlockSliceVariation
 >;
 
+// Alias types for new slice IDs
+export type ArticleFullBleedSlice = FullWidthImageSlice;
+export type ArticleImageBlockSlice = ImageBlockSlice;
+export type ArticleNumberedGridSlice = NumberedGridSlice;
+export type ArticleTextBlockSlice = TextBlockSlice;
+
+/**
+ * Primary content in *StaticBioBlock → Default → Primary*
+ */
+export interface StaticBioBlockSliceDefaultPrimary {
+  bio_heading: prismic.RichTextField;
+  bio_content: prismic.RichTextField;
+  bio_images: prismic.GroupField<{
+    image: prismic.ImageField<never>;
+  }>;
+  bio_items: prismic.GroupField<{
+    item_type: prismic.SelectField<"header" | "row">;
+    item_heading: prismic.KeyTextField;
+    item_subtitle: prismic.KeyTextField;
+    item_index: prismic.KeyTextField;
+    item_description: prismic.RichTextField;
+  }>;
+}
+
+/**
+ * Default variation for StaticBioBlock Slice
+ */
+export type StaticBioBlockSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<StaticBioBlockSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *StaticBioBlock*
+ */
+type StaticBioBlockSliceVariation = StaticBioBlockSliceDefault;
+
+/**
+ * StaticBioBlock Shared Slice
+ *
+ * - **API ID**: `static_bio_block`
+ * - **Description**: Bio section with staggered images, intro, and flexible content sections
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type StaticBioBlockSlice = prismic.SharedSlice<
+  "static_bio_block",
+  StaticBioBlockSliceVariation
+>;
+
 declare module "@prismicio/client" {
   interface CreateClient {
     (
@@ -731,21 +781,29 @@ declare module "@prismicio/client" {
       FullWidthImageSliceDefaultPrimary,
       FullWidthImageSliceVariation,
       FullWidthImageSliceDefault,
+      ArticleFullBleedSlice,
       ImageBlockSlice,
       ImageBlockSliceDefaultPrimary,
       ImageBlockSliceDefaultItem,
       ImageBlockSliceVariation,
       ImageBlockSliceDefault,
+      ArticleImageBlockSlice,
       NumberedGridSlice,
       NumberedGridSliceDefaultPrimary,
       NumberedGridSliceDefaultItem,
       NumberedGridSliceVariation,
       NumberedGridSliceDefault,
+      ArticleNumberedGridSlice,
       TextBlockSlice,
       TextBlockSliceDefaultPrimary,
       TextBlockSliceDefaultItem,
       TextBlockSliceVariation,
       TextBlockSliceDefault,
+      ArticleTextBlockSlice,
+      StaticBioBlockSlice,
+      StaticBioBlockSliceDefaultPrimary,
+      StaticBioBlockSliceVariation,
+      StaticBioBlockSliceDefault,
     };
   }
 }

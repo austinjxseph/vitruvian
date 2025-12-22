@@ -4,6 +4,10 @@
 
   export let data;
   const { page } = data;
+
+  // Debug logging
+  console.log("About page data:", page);
+  console.log("About page slices:", page?.data?.slices);
 </script>
 
 <svelte:head>
@@ -17,7 +21,10 @@
     <meta property="og:image" content={page.data.meta_image.url} />
     <meta property="twitter:image" content={page.data.meta_image.url} />
   {/if}
-  <meta property="og:title" content={page.data.meta_title || "About | Austin Joseph"} />
+  <meta
+    property="og:title"
+    content={page.data.meta_title || "About | Austin Joseph"}
+  />
   <meta
     property="og:description"
     content={page.data.meta_description ||
