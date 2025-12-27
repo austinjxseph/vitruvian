@@ -16,7 +16,7 @@
           "type": "StructuredText",
           "config": {
             "label": "Bio Heading",
-            "placeholder": "I'm a Design Engineer currently based in London...",
+            "placeholder": "Add heading here",
             "allowTargetBlank": true,
             "single": "paragraph,em,strong"
           }
@@ -25,7 +25,7 @@
           "type": "StructuredText",
           "config": {
             "label": "Bio Content",
-            "placeholder": "Your biography paragraphs...",
+            "placeholder": "Add body text, featured underneath the heading",
             "allowTargetBlank": true,
             "multi": "paragraph,em,strong,hyperlink"
           }
@@ -56,36 +56,36 @@
                 "config": {
                   "label": "Item Type",
                   "placeholder": "Select type...",
-                  "options": ["header", "row"],
-                  "default_value": "row"
+                  "options": ["header", "cell"],
+                  "default_value": "cell"
                 }
               },
               "item_heading": {
                 "type": "Text",
                 "config": {
                   "label": "Heading",
-                  "placeholder": "Header: section title | Row: job title, degree, etc."
+                  "placeholder": "Add the group heading here"
                 }
               },
               "item_subtitle": {
                 "type": "Text",
                 "config": {
-                  "label": "Subtitle (row only)",
-                  "placeholder": "Row only: period, institution, etc."
+                  "label": "Subtitle (cell only)",
+                  "placeholder": "Add the group subheading here, featured as secondary text"
                 }
               },
               "item_index": {
                 "type": "Text",
                 "config": {
-                  "label": "Index (row only)",
-                  "placeholder": "Row only: years (e.g., 2022-2023)"
+                  "label": "Index (cell only)",
+                  "placeholder": "Add the group index here, featured right-aligned"
                 }
               },
               "item_description": {
                 "type": "StructuredText",
                 "config": {
                   "label": "Description",
-                  "placeholder": "Header: optional intro | Row: job description, etc.",
+                  "placeholder": "Add the group body text here (optional)",
                   "allowTargetBlank": true,
                   "single": "paragraph,em,strong,hyperlink"
                 }

@@ -40,7 +40,7 @@
           description: item.item_description || null,
           rows: [],
         };
-      } else if (item.item_type === "row" && currentGroup) {
+      } else if (item.item_type === "cell" && currentGroup) {
         currentGroup.rows.push(item);
       }
     }
@@ -59,10 +59,10 @@
   <div class="u-layout-vflex container-xl py-xl">
     <div class="u-layout-hflex inner">
       <!-- Left Panel: Staggered Images -->
-      <div class="u-layout-vflex images-column">
+      <div class="u-layout-vflex col img">
         {#each images as item, i}
-          <div class="u-layout-hflex slide slide-{i + 1}">
-            <div class="image-wrapper">
+          <div class="u-layout-hflex {i + 1}">
+            <div class="image">
               <PrismicImage field={item.image} loading="lazy" />
             </div>
           </div>
@@ -70,17 +70,17 @@
       </div>
 
       <!-- Right Panel: Content -->
-      <div class="u-layout-vflex content-column">
+      <div class="u-layout-vflex col body">
         <!-- Bio Heading + Content -->
-        <div class="u-layout-vflex text-blocks">
+        <div class="u-layout-vflex page-header">
           {#if primary.bio_heading}
-            <div class="intro-text">
+            <div class="heading">
               <PrismicRichText field={primary.bio_heading} />
             </div>
           {/if}
 
           {#if primary.bio_content}
-            <div class="u-layout-vflex bio-text">
+            <div class="u-layout-vflex content">
               <PrismicRichText field={primary.bio_content} />
             </div>
           {/if}
@@ -88,32 +88,32 @@
 
         <!-- Dynamic Sections -->
         {#each groupedItems as group}
-          <div class="u-layout-vflex section-block">
-            <h3 class="u-font-accent section-heading">{group.heading}</h3>
+          <div class="u-layout-vflex group">
+            <h3 class="u-font-accent group-heading">{group.heading}</h3>
             {#if group.description && group.description.length > 0}
-              <div class="section-description">
+              <div class="group-description">
                 <PrismicRichText field={group.description} />
               </div>
             {/if}
             {#each group.rows as row}
-              <div class="u-layout-vflex cell">
-                <div class="u-layout-vflex cell-header">
+              <div class="u-layout-vflex item">
+                <div class="u-layout-vflex item-header">
                   {#if row.item_index}
                     <!-- Education-style: heading + index on same line -->
-                    <div class="u-layout-hflex cell-row-between">
-                      <p class="cell-title">{row.item_heading}</p>
-                      <p class="cell-title">{row.item_index}</p>
+                    <div class="u-layout-hflex item-row-between">
+                      <p class="item-heading">{row.item_heading}</p>
+                      <p class="item-index">{row.item_index}</p>
                     </div>
                   {:else if row.item_heading}
-                    <p class="cell-title">{row.item_heading}</p>
+                    <p class="item-heading">{row.item_heading}</p>
                   {/if}
                   {#if row.item_subtitle}
-                    <p class="cell-subtitle">{row.item_subtitle}</p>
+                    <p class="item-subtitle">{row.item_subtitle}</p>
                   {/if}
                 </div>
                 {#if row.item_description && row.item_description.length > 0}
-                  <div class="u-layout-hflex cell-row">
-                    <div class="cell-description">
+                  <div class="u-layout-hflex item-row">
+                    <div class="item-description">
                       <PrismicRichText field={row.item_description} />
                     </div>
                   </div>
@@ -131,18 +131,25 @@
   .inner {
     width: 100%;
     gap: var(--padding--xl);
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   @media screen and (max-width: 991px) {
     .inner {
-      flex-direction: column;
+      grid-template-columns: 1fr;
       gap: var(--gap--xxl);
     }
   }
 
+  @media screen and (min-width: 1600px) {
+    .inner {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
   /* Left column - Images */
-  .images-column {
+  .col.img {
     flex: 1;
     gap: var(--gap--md);
     max-width: 600px;
@@ -153,14 +160,20 @@
   }
 
   @media screen and (max-width: 991px) {
-    .images-column {
+    .col.img {
       max-width: none;
       max-height: none;
       width: 100%;
     }
   }
 
-  .slide {
+  @media screen and (min-width: 1600px) {
+    .col.img {
+      grid-column: span 2;
+    }
+  }
+
+  .col.img > div {
     flex: 1;
     min-height: 1px;
     min-width: 1px;
@@ -168,26 +181,26 @@
     width: 100%;
   }
 
-  .slide-1 {
+  .col.img > div:nth-child(1) {
     padding-right: 0;
   }
 
-  .slide-2 {
+  .col.img > div:nth-child(2) {
     padding-right: 80px;
   }
 
-  .slide-3 {
+  .col.img > div:nth-child(3) {
     padding-right: 160px;
   }
 
   @media screen and (max-width: 991px) {
-    .slide-2,
-    .slide-3 {
+    .col.img > div:nth-child(2),
+    .col.img > div:nth-child(3) {
       padding-right: 0;
     }
   }
 
-  .image-wrapper {
+  .image {
     flex: 1;
     height: 100%;
     min-height: 1px;
@@ -195,14 +208,14 @@
     background-color: var(--_themes---neutrals--100);
   }
 
-  .image-wrapper :global(img) {
+  .image :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
   /* Right column - Content */
-  .content-column {
+  .col.body {
     flex: 1;
     max-width: 500px;
     min-height: 1px;
@@ -211,22 +224,22 @@
   }
 
   @media screen and (max-width: 991px) {
-    .content-column {
+    .col.body {
       max-width: none;
       width: 100%;
     }
   }
 
-  .text-blocks {
+  .page-header {
     gap: var(--gap--xxl);
     width: 100%;
   }
 
-  .intro-text {
+  .heading {
     max-width: 480px;
   }
 
-  .intro-text :global(p) {
+  .heading :global(p) {
     font-family: var(--typeface--primary);
     font-size: var(--h3--font-size);
     line-height: var(--h3--line-height);
@@ -235,16 +248,16 @@
     text-shadow: 4px 4px 60px black;
   }
 
-  .intro-text :global(em) {
+  .heading :global(em) {
     font-family: var(--typeface--secondary);
     font-style: normal;
   }
 
-  .bio-text {
+  .content {
     gap: var(--gap--md);
   }
 
-  .bio-text :global(p) {
+  .content :global(p) {
     font-family: var(--typeface--primary);
     font-size: var(--paragraph--font-size-s);
     line-height: var(--paragraph--line-height-s);
@@ -252,12 +265,12 @@
     color: var(--_themes---site--text--text-primary);
   }
 
-  .section-block {
+  .group {
     gap: var(--gap--lg);
     width: 100%;
   }
 
-  .section-heading {
+  .group-heading {
     font-family: var(--typeface--secondary);
     font-size: var(--h3--font-size);
     line-height: var(--h3--line-height);
@@ -269,7 +282,7 @@
     font-style: normal;
   }
 
-  .section-description :global(p) {
+  .group-description :global(p) {
     font-family: var(--typeface--primary);
     font-size: var(--paragraph--font-size-s);
     line-height: var(--paragraph--line-height-s);
@@ -277,24 +290,24 @@
     color: var(--_themes---site--text--text-primary);
   }
 
-  .cell {
+  .item {
     gap: var(--gap--md);
     width: 100%;
   }
 
-  .cell-header {
+  .item-header {
     gap: var(--gap--xxs);
     width: 100%;
   }
 
-  .cell-title {
+  .item-heading {
     font-family: var(--typeface--primary);
     font-size: var(--paragraph--font-size-s);
     line-height: 1.2;
     color: var(--_themes---site--text--text-primary);
   }
 
-  .cell-subtitle {
+  .item-subtitle {
     font-family: var(--typeface--primary);
     font-size: var(--paragraph--font-size-s);
     line-height: var(--paragraph--line-height-s);
@@ -302,20 +315,20 @@
     color: var(--_themes---site--text--text-secondary);
   }
 
-  .cell-row {
+  .item-row {
     width: 100%;
   }
 
-  .cell-row-between {
+  .item-row-between {
     width: 100%;
     justify-content: space-between;
   }
 
-  .cell-description {
+  .item-description {
     flex: 1;
   }
 
-  .cell-description :global(p) {
+  .item-description :global(p) {
     font-family: var(--typeface--primary);
     font-size: var(--paragraph--font-size-s);
     line-height: var(--paragraph--line-height-s);
