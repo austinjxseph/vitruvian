@@ -63,7 +63,9 @@
         {#each images as item, i}
           <div class="u-layout-hflex {i + 1}">
             <div class="image">
-              <PrismicImage field={item.image} loading="lazy" />
+              {#if item.image?.url}
+                <img src={item.image.url.split('?')[0]} alt={item.image.alt || ""} loading="lazy" />
+              {/if}
             </div>
           </div>
         {/each}

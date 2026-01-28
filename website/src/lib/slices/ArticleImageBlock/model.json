@@ -27,9 +27,6 @@
           "type": "Image",
           "config": {
             "label": "Image",
-            "constraint": {
-              "width": 1600
-            },
             "thumbnails": []
           }
         },

@@ -23,11 +23,9 @@
       {#each items as item}
         <div class="u-layout-vflex img-container">
           <div class="u-layout-vflex img">
-            <PrismicImage
-              field={item.image}
-              loading="lazy"
-              widths={[640, 750, 828, 1080, 1200, 1920, 2048]}
-            />
+            {#if item.image?.url}
+              <img src={item.image.url.split('?')[0]} alt={item.image.alt || ""} loading="lazy" />
+            {/if}
           </div>
           {#if item.caption}
             <figcaption class="text-sm caption">{item.caption}</figcaption>

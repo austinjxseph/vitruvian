@@ -16,11 +16,9 @@
 <section class="u-layout-vflex section">
   <div class="u-layout-vflex container-fw">
     <div class="u-layout-vflex img">
-      <PrismicImage
-        field={slice.primary.image}
-        loading="lazy"
-        widths={[640, 750, 828, 1080, 1200, 1920, 2048, 3840]}
-      />
+      {#if slice.primary.image?.url}
+        <img src={slice.primary.image.url.split('?')[0]} alt={slice.primary.image.alt || ""} loading="lazy" />
+      {/if}
     </div>
     {#if slice.primary.caption}
       <figcaption class="text-sm caption">{slice.primary.caption}</figcaption>

@@ -8,6 +8,9 @@
   // Import components
   import Header from "../lib/components/Header.svelte";
   import Footer from "../lib/components/Footer.svelte";
+
+  // Import motion utilities
+  import "../lib/scripts/motion.js";
 </script>
 
 <div class="page">

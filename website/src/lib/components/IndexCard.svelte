@@ -41,18 +41,14 @@
 
 <a {href} class="card u-inline-block">
   <div class="card-overlay">
-    <PrismicImage
-      field={overlayImage}
-      loading="lazy"
-      imgixParams={{ q: 100 }}
-    />
+    {#if overlayImage?.url}
+      <img src={overlayImage.url} alt={overlayImage.alt || ""} loading="lazy" />
+    {/if}
   </div>
   <div class="card-bg">
-    <PrismicImage
-      field={backgroundImage}
-      loading="lazy"
-      imgixParams={{ q: 100 }}
-    />
+    {#if backgroundImage?.url}
+      <img src={backgroundImage.url} alt={backgroundImage.alt || ""} loading="lazy" />
+    {/if}
   </div>
   <div class="u-layout-hflex card-text">
     <div class="u-layout-vflex card-heading">
