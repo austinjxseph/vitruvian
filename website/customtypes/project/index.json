@@ -79,10 +79,6 @@
         "type": "Image",
         "config": {
           "label": "Thumbnail Base",
-          "constraint": {
-            "width": 1200,
-            "height": 800
-          },
           "thumbnails": []
         }
       },
@@ -90,10 +86,6 @@
         "type": "Image",
         "config": {
           "label": "Thumbnail Overlay",
-          "constraint": {
-            "width": 1200,
-            "height": 800
-          },
           "thumbnails": []
         }
       },

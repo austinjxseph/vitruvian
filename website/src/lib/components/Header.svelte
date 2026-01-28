@@ -35,7 +35,7 @@
     </a>
 
     <ul role="list" class="drawer u-list-unstyled">
-      <li class="links is-pr">
+      <li class="links">
         <a href="#" class="link u-inline-block">
           <h3>Sandbox</h3>
         </a>
@@ -47,17 +47,6 @@
         </a>
         <a href="#" class="link u-inline-block">
           <h3>Resume</h3>
-        </a>
-      </li>
-      <li class="links is-sec">
-        <a href="#" class="link u-inline-block">
-          <h3>Colophon</h3>
-        </a>
-        <a href="#" class="link u-inline-block">
-          <h3>Uses</h3>
-        </a>
-        <a href="#" class="link u-inline-block">
-          <h3>Thoughts</h3>
         </a>
       </li>
     </ul>
@@ -114,6 +103,19 @@
     display: flex;
     position: relative;
     overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.2s;
+    font-size: 32px;
+    line-height: 1.4em;
+    letter-spacing: -0.02em;
+  }
+
+  .links:hover .link {
+    opacity: 0.2;
+  }
+
+  .links:hover .link:hover {
+    opacity: 1;
   }
 
   .link.is-marker {
@@ -125,7 +127,7 @@
     z-index: 3;
     opacity: 0;
     display: none;
-    background-color: #0000001f;
+    background-color: rgba(0, 0, 0, 0.4);
     height: 100dvh;
     transition: opacity 0.15s;
     position: absolute;
@@ -145,6 +147,7 @@
     flex-direction: column;
     gap: var(--gap--xxl);
     justify-content: center;
+    align-items: center;
     width: 100vw;
     height: 100dvh;
     max-height: 100dvh;
@@ -166,11 +169,10 @@
   }
 
   .links {
-    grid-column-gap: 12px;
-    grid-row-gap: 12px;
+    gap: 8px;
     flex-flow: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
     display: flex;
   }
 
@@ -257,8 +259,6 @@
       padding-bottom: 3rem;
     }
 
-    .links.is-sec {
-      display: none;
-    }
+
   }
 </style>

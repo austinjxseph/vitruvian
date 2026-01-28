@@ -13,6 +13,7 @@
 </script>
 
 <footer class="u-layout-vflex component" class:fixed>
+  <div class="vignette"></div>
   <div class="u-layout-vflex inner">
     <div class="u-layout-hflex row copyright">
       <div class="u-layout-vflex u-text-secondary">
@@ -66,6 +67,20 @@
     align-items: flex-start;
     display: flex;
     position: relative;
+  }
+
+  .vignette {
+    position: absolute;
+    inset: 0;
+    min-height: 10vh;
+    background: linear-gradient(to top, var(--_themes---site--bg--bg-primary) 0%, color-mix(in srgb, var(--_themes---site--bg--bg-primary) 80%, transparent) 40%, transparent 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .inner {
+    position: relative;
+    z-index: 1;
   }
 
   .fixed {

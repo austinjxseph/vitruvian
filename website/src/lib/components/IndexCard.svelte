@@ -44,14 +44,14 @@
     <PrismicImage
       field={overlayImage}
       loading="lazy"
-      widths={[640, 750, 828, 1080, 1200, 1920, 2048]}
+      imgixParams={{ q: 100 }}
     />
   </div>
   <div class="card-bg">
     <PrismicImage
       field={backgroundImage}
       loading="lazy"
-      widths={[640, 750, 828, 1080, 1200, 1920, 2048]}
+      imgixParams={{ q: 100 }}
     />
   </div>
   <div class="u-layout-hflex card-text">
@@ -84,9 +84,13 @@
   }
 
   .card-bg {
-    height: 120%;
     position: absolute;
-    inset: 0%;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    aspect-ratio: 4 / 5;
+    width: 100%;
   }
 
   .card-bg :global(img) {
