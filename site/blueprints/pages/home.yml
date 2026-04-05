@@ -6,7 +6,7 @@ options:
   delete: false
 
 columns:
-  - width: 1/3
+  - width: 1/2
     fields:
       hero_title:
         type: writer
@@ -14,33 +14,37 @@ columns:
         marks:
           - italic
 
+      hero_availability_status:
+        type: select
+        label: Status
+        default: available
+        width: 1/4
+        options:
+          blocked: Blocked
+          available: Available
+          hold: Hold
+
       hero_eyebrow:
         type: text
         label: Eyebrow
         default: Available for freelance work
-
-      hero_availability_status:
-        type: select
-        label: Availability Status
-        default: available
-        options:
-          available: Available
-          on_hold: On Hold
-          not_accepting: Not Accepting
+        width: 3/4
 
       hero_button_label:
         type: text
         label: Button Label
         default: Information
+        width: 1/2
 
       hero_button_link:
         type: link
         label: Button Link
+        width: 1/2
         options:
           - page
           - url
 
-  - width: 2/3
+  - width: 1/2
     sections:
       featured:
         type: fields

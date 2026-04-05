@@ -11,6 +11,8 @@ if ($imagesStructure->isNotEmpty()) {
                 "url" => $file->url(),
                 "alt" => $file->alt()->value() ?? "",
                 "caption" => $item->caption()->value() ?? "",
+                "width" => $file->width(),
+                "height" => $file->height(),
             ];
         }
     }
@@ -24,6 +26,8 @@ if (empty($images)) {
             "url" => $file->url(),
             "alt" => $file->alt()->value() ?? "",
             "caption" => $block->caption()->value() ?? "",
+            "width" => $file->width(),
+            "height" => $file->height(),
         ];
     }
 }

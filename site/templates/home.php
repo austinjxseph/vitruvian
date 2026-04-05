@@ -15,13 +15,23 @@ foreach ($page->featured_projects()->toPages() as $project) {
             $project->thumbnail_overlay()->toFile()?->url() ?? "",
     ];
 }
+
+$availabilityStatus = $page
+    ->hero_availability_status()
+    ->or("available")
+    ->value();
+
+$availabilityStatus = match ($availabilityStatus) {
+    "on_hold" => "hold",
+    "not_accepting" => "blocked",
+    "blocked", "available", "hold" => $availabilityStatus,
+    default => "available",
+};
+
 $indexId = "index";
 $indexProps = [
     "eyebrow" => $page->hero_eyebrow()->value(),
-    "availabilitystatus" => $page
-        ->hero_availability_status()
-        ->or("available")
-        ->value(),
+    "availabilitystatus" => $availabilityStatus,
     "title" => strip_tags(
         (string) $page->hero_title()->kti(),
         "<em><i><span><strong><b>",

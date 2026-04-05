@@ -91,12 +91,33 @@
         color: var(--_themes---site--text--text-secondary);
     }
 
+    .col-body :global(b-header) {
+        text-align: justify;
+    }
+
     .col-body {
         display: flex;
         flex-direction: column;
         flex: 1;
         min-height: 1px;
         min-width: 1px;
+    }
+
+    @media screen and (min-width: 1729px) {
+        .col-body {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: var(--gap--md);
+            align-content: start;
+        }
+
+        .col-body :global(b-text) {
+            grid-column: span 2;
+        }
+
+        .col-body :global(b-header) {
+            grid-column: span 1;
+        }
     }
 
     @media screen and (max-width: 991px) {

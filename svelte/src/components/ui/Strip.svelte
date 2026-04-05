@@ -53,14 +53,10 @@
     const WHEEL_SENSITIVITY = 0.004;
     const TOUCH_SENSITIVITY = 0.008;
     const FRICTION = 0.91;
-    const SNAP_THRESHOLD = 0.003;
-    const SNAP_LERP = 0.1;
-    const SNAP_EPSILON = 0.0015;
-    const IDLE_DELAY = 100;
     const ACTIVE_SWITCH_HYSTERESIS = CARD_SPACING * 0.08;
 
     const HOVER_OPACITY = 0.2;
-    const LERP_SPEED = 0.18;
+    const LERP_SPEED = 0.28;
 
     const MOBILE_BREAKPOINT = 991;
 
@@ -347,10 +343,6 @@
 
         let stripOffset = 0;
         let stripVelocity = 0;
-        let isSnapping = false;
-        let snapTarget = 0;
-        let snapMeshIndex = -1;
-        let lastInteractionTime = 0;
         let lastActiveIndex = -1;
         let lastActiveMeshIndex = -1;
         let touchLastY = 0;
@@ -364,37 +356,14 @@
             );
         }
 
-        function getNearestMesh(offset: number, centreY: number) {
-            let bestIndex = 0;
-            let bestWorldY = 0;
-            let bestDist = Infinity;
-
-            for (let i = 0; i < MESH_COUNT; i++) {
-                const baseSeatY = meshes[i].userData.baseSeatY as number;
-                const worldY = wrapY(baseSeatY, offset);
-                const dist = Math.abs(worldY - centreY);
-                if (dist < bestDist) {
-                    bestDist = dist;
-                    bestIndex = i;
-                    bestWorldY = worldY;
-                }
-            }
-
-            return { index: bestIndex, worldY: bestWorldY, dist: bestDist };
-        }
-
         function onWheel(e: WheelEvent) {
             e.preventDefault();
             stripVelocity += e.deltaY * WHEEL_SENSITIVITY;
-            isSnapping = false;
-            lastInteractionTime = performance.now();
         }
 
         function onTouchStart(e: TouchEvent) {
             touchLastY = e.touches[0].clientY;
             stripVelocity = 0;
-            isSnapping = false;
-            lastInteractionTime = performance.now();
         }
 
         function onTouchMove(e: TouchEvent) {
@@ -404,11 +373,6 @@
             stripVelocity = deltaY * TOUCH_SENSITIVITY;
             stripOffset += stripVelocity;
             touchLastY = y;
-            lastInteractionTime = performance.now();
-        }
-
-        function onTouchEnd() {
-            lastInteractionTime = performance.now();
         }
 
         if (scrollZone) {
@@ -419,7 +383,6 @@
             scrollZone.addEventListener("touchmove", onTouchMove, {
                 passive: false,
             });
-            scrollZone.addEventListener("touchend", onTouchEnd);
         }
 
         let isVisible = true;
@@ -452,44 +415,16 @@
             }
             animationId = requestAnimationFrame(animate);
 
-            const now = performance.now();
-
-            // Viewport centre in world Y — used for snap target and active card
+            // Viewport centre in world Y — used to determine the active card
             raycaster.setFromCamera(new Vector2(0, 0), camera);
             const _r = raycaster.ray;
             const _t = -_r.origin.z / _r.direction.z;
             const viewCentreY = _r.origin.y + _t * _r.direction.y;
 
-            if (!isSnapping) {
-                stripOffset += stripVelocity;
-                stripVelocity *= FRICTION;
-            }
+            stripOffset += stripVelocity;
+            stripVelocity *= FRICTION;
 
-            if (
-                !isSnapping &&
-                Math.abs(stripVelocity) < SNAP_THRESHOLD &&
-                now - lastInteractionTime > IDLE_DELAY
-            ) {
-                const nearest = getNearestMesh(stripOffset, viewCentreY);
-                snapMeshIndex = nearest.index;
-                snapTarget = stripOffset + (viewCentreY - nearest.worldY);
-                isSnapping = true;
-                stripVelocity = 0;
-            }
-
-            if (isSnapping) {
-                stripOffset += (snapTarget - stripOffset) * SNAP_LERP;
-                if (Math.abs(snapTarget - stripOffset) < SNAP_EPSILON) {
-                    stripOffset = snapTarget;
-                    isSnapping = false;
-                    snapMeshIndex = -1;
-                }
-            }
-
-            if (
-                lastMouseEvent &&
-                (Math.abs(stripVelocity) > 0.001 || isSnapping)
-            ) {
+            if (lastMouseEvent && Math.abs(stripVelocity) > 0.001) {
                 updateHover(lastMouseEvent);
             }
 
@@ -516,9 +451,7 @@
                 meshes[i].scale.set(scaleX, 1, 1);
             }
 
-            if (isSnapping && snapMeshIndex >= 0) {
-                activeIndex = snapMeshIndex;
-            } else if (lastActiveMeshIndex >= 0) {
+            if (lastActiveMeshIndex >= 0) {
                 const lastDist = Math.abs(
                     (meshes[lastActiveMeshIndex].position.y as number) -
                         viewCentreY,
@@ -604,7 +537,6 @@
                 scrollZone.removeEventListener("wheel", onWheel);
                 scrollZone.removeEventListener("touchstart", onTouchStart);
                 scrollZone.removeEventListener("touchmove", onTouchMove);
-                scrollZone.removeEventListener("touchend", onTouchEnd);
             }
 
             renderer.domElement.removeEventListener(

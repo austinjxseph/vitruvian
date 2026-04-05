@@ -6,7 +6,11 @@ Hero-title: <p>Design Engineer <em>obsessed</em> with building products bridging
 
 ----
 
-Hero-eyebrow: Available for freelance work
+Hero-eyebrow: Currently working at Shoreditch Design
+
+----
+
+Hero-availability-status: hold
 
 ----
 

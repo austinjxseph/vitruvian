@@ -7,6 +7,8 @@ $props = [
     "image" => $file?->url() ?? "",
     "alt" => $file?->alt()->value() ?? "",
     "caption" => $block->caption()->value() ?? "",
+    "width" => $file?->width() ?? null,
+    "height" => $file?->height() ?? null,
 ];
 ?>
 

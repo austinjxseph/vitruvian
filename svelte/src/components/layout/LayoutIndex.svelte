@@ -10,7 +10,12 @@
         projects = [],
     }: {
         eyebrow?: string;
-        availabilitystatus?: "available" | "on_hold" | "not_accepting";
+        availabilitystatus?:
+            | "available"
+            | "hold"
+            | "blocked"
+            | "on_hold"
+            | "not_accepting";
         title?: string;
         buttonlabel?: string;
         buttonhref?: string;
@@ -33,12 +38,17 @@
     const TWEEN_DURATION = 0.35;
     const cardCount = $derived(projects.length);
     const normalizedAvailabilityStatus = $derived.by(() => {
+        if (availabilitystatus === "hold" || availabilitystatus === "on_hold") {
+            return "hold";
+        }
+
         if (
-            availabilitystatus === "on_hold" ||
+            availabilitystatus === "blocked" ||
             availabilitystatus === "not_accepting"
         ) {
-            return availabilitystatus;
+            return "blocked";
         }
+
         return "available";
     });
     // 3 copies for infinite scroll runway
@@ -459,11 +469,11 @@
         height: 4px;
     }
 
-    .marker.is-on_hold {
+    .marker.is-hold {
         background-color: #ff8a00;
     }
 
-    .marker.is-not_accepting {
+    .marker.is-blocked {
         background-color: #e83452;
     }
 
