@@ -59,7 +59,7 @@
     const LERP_SPEED = 0.28;
 
     const MOBILE_BREAKPOINT = 991;
-    const ACTIVE_VIEW_NDC_Y = -0.08;
+    const ACTIVE_VIEW_NDC_Y = 0.12;
 
     let container = $state<HTMLDivElement>();
     let isMobile = $state(false);
