@@ -61,7 +61,7 @@
     --paragraph--font-size-m: var(--_units---abs--3-5);
     --paragraph--font-size-l: var(--_units---abs--4);
 
-    --h1--line-height: var(--_units---rel--1-1);
+    --h1--line-height: var(--_units---rel--1-1-5);
     --h2--line-height: var(--_units---rel--1-2);
     --h3--line-height: var(--_units---rel--1-4);
     --h4--line-height: var(--_units---rel--1-4);
@@ -180,6 +180,7 @@
     --_units---rel--9: 0.8em;
     --_units---rel--1-0: 1em;
     --_units---rel--1-1: 1.1em;
+    --_units---rel--1-1-5: 1.15em;
     --_units---rel--1-2: 1.2em;
     --_units---rel--1-3: 1.3em;
     --_units---rel--1-4: 1.4em;
@@ -248,8 +249,8 @@ body {
         --typeface--secondary: "EB Garamond Italic", Georgia, serif;
         --typeface--tertiary: "EB Garamond Italic", Georgia, serif;
 
-        --h1--font-size: var(--_units---abs--8);
-        --h2--font-size: var(--_units---abs--7);
+        --h1--font-size: var(--_units---abs--6);
+        --h2--font-size: var(--_units---abs--6);
         --h3--font-size: var(--_units---abs--6);
         --h4--font-size: var(--_units---abs--3-5);
         --h5--font-size: var(--_units---abs--3-5);
@@ -258,14 +259,14 @@ body {
         --paragraph--font-size-m: var(--_units---abs--3-5);
         --paragraph--font-size-l: var(--_units---abs--4);
 
-        --h1--line-height: var(--_units---rel--1-1);
+        --h1--line-height: var(--_units---rel--1-2);
         --h2--line-height: var(--_units---rel--1-2);
         --h3--line-height: var(--_units---rel--1-4);
         --h4--line-height: var(--_units---rel--1-4);
         --h5--line-height: var(--_units---rel--1-4);
         --h6--line-height: var(--_units---rel--1-4);
         --paragraph--line-height-s: var(--_units---rel--1-6);
-        --paragraph--line-height-m: var(--_units---rel--1-6);
+        --paragraph--line-height-m: var(--_units---rel--1-8);
         --paragraph--line-height-l: var(--_units---rel--1-4);
 
         --h1--letter-spacing: var(--_units---rel--0-01);

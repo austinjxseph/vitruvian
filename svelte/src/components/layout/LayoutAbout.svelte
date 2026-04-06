@@ -91,7 +91,7 @@
         color: var(--_themes---site--text--text-secondary);
     }
 
-    .col-body :global(b-header) {
+    .col-body :global(text-md) {
         text-align: justify;
     }
 
@@ -135,6 +135,10 @@
             position: relative;
             top: auto;
             aspect-ratio: 4 / 3;
+        }
+
+        .col-body :global(text-md) {
+            text-align: left;
         }
     }
 </style>

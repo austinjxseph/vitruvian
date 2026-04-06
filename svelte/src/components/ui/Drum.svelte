@@ -13,6 +13,7 @@
         ShaderMaterial,
         TextureLoader,
         Vector2,
+        Vector3,
         WebGLRenderer,
     } from "three";
     import type { Texture } from "three";
@@ -31,6 +32,7 @@
     const DRUM_RADIUS = 2.0;
     const CAMERA_Z = 12;
     const ROTATION_SPEED = 0.006;
+    const LIGHT_DIRECTION = [0.7, 0.95, 1.2] as const;
 
     // Vertex shader — wraps each card onto a cylinder around Y-axis
     const vertexShader = `
@@ -40,6 +42,9 @@
 
         varying vec2 vUv;
         varying float vDepth;
+        varying vec3 vCurveNormal;
+        varying vec3 vViewPosition;
+        varying float vHeight;
 
         void main() {
             // UVs stay at full scale — image doesn't distort
@@ -56,8 +61,12 @@
 
             // Per-vertex depth: positive = facing camera, negative = behind horizon
             vDepth = pos.z;
+            vHeight = pos.y;
+            vCurveNormal = normalize(vec3(sin(angle), 0.0, cos(angle)));
 
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+            vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+            vViewPosition = -mvPosition.xyz;
+            gl_Position = projectionMatrix * mvPosition;
         }
     `;
 
@@ -67,9 +76,17 @@
         uniform vec2 uImageRes;
         uniform vec2 uPlaneSize;
         uniform float uScaleY;
+        uniform vec3 uLightDir;
+        uniform float uAmbientStrength;
+        uniform float uDiffuseStrength;
+        uniform float uSpecularStrength;
+        uniform float uRimStrength;
 
         varying vec2 vUv;
         varying float vDepth;
+        varying vec3 vCurveNormal;
+        varying vec3 vViewPosition;
+        varying float vHeight;
 
         vec2 CoverUV(vec2 u, vec2 s, vec2 i) {
             float rs = s.x / s.y;
@@ -88,9 +105,29 @@
             vec2 uv = CoverUV(maskedUv, uPlaneSize, uImageRes);
             vec4 tex = texture2D(uTexture, uv);
 
-            // Per-pixel dim past the horizon: darken RGB instead of alpha (avoids transparent sort overhead)
-            float fade = vDepth > 0.0 ? 1.0 : 0.3;
-            gl_FragColor = vec4(tex.rgb * fade, tex.a);
+            vec3 normal = normalize(vCurveNormal);
+            vec3 lightDir = normalize(uLightDir);
+            vec3 viewDir = normalize(vViewPosition);
+            vec3 halfVector = normalize(lightDir + viewDir);
+
+            float diffuse = max(dot(normal, lightDir), 0.0);
+            float wrappedDiffuse = diffuse * 0.75 + 0.25;
+            float specular = pow(max(dot(normal, halfVector), 0.0), 20.0);
+            float rim = pow(1.0 - max(dot(normal, viewDir), 0.0), 2.2);
+
+            float horizonFade = smoothstep(-uPlaneSize.x * 0.85, 0.0, vDepth);
+            float verticalShade = smoothstep(-uPlaneSize.y * 0.9, uPlaneSize.y * 0.4, vHeight);
+
+            float lighting = uAmbientStrength
+                + wrappedDiffuse * uDiffuseStrength
+                + verticalShade * 0.08;
+
+            vec3 litColor = tex.rgb * lighting;
+            litColor += vec3(1.0) * specular * uSpecularStrength;
+            litColor += vec3(1.0) * rim * uRimStrength;
+
+            float fade = mix(0.26, 1.0, horizonFade);
+            gl_FragColor = vec4(litColor * fade, tex.a);
         }
     `;
 
@@ -187,6 +224,17 @@
                         value: new Vector2(CARD_WIDTH, CARD_HEIGHT),
                     },
                     uImageRes: { value: new Vector2(1, 1) },
+                    uLightDir: {
+                        value: new Vector3(
+                            LIGHT_DIRECTION[0],
+                            LIGHT_DIRECTION[1],
+                            LIGHT_DIRECTION[2],
+                        ),
+                    },
+                    uAmbientStrength: { value: 0.6 },
+                    uDiffuseStrength: { value: 0.55 },
+                    uSpecularStrength: { value: 0.12 },
+                    uRimStrength: { value: 0.08 },
                 },
                 vertexShader,
                 fragmentShader,
@@ -349,7 +397,10 @@
     });
 </script>
 
-<div class="drum-container" bind:this={container}></div>
+<div class="drum-shell">
+    <div class="drum-shadow" aria-hidden="true"></div>
+    <div class="drum-container" bind:this={container}></div>
+</div>
 
 <style>
     :global(c-drum) {
@@ -358,15 +409,52 @@
         height: 100%;
     }
 
+    .drum-shell {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
     .drum-container {
         width: 100%;
         height: 100%;
         position: relative;
+        z-index: 1;
+    }
+
+    .drum-shadow {
+        position: absolute;
+        left: 50%;
+        bottom: 18%;
+        width: min(38vw, 460px);
+        height: min(11vw, 120px);
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background:
+            radial-gradient(
+                ellipse at center,
+                rgba(0, 0, 0, 0.34) 0%,
+                rgba(0, 0, 0, 0.18) 42%,
+                rgba(0, 0, 0, 0.08) 62%,
+                rgba(0, 0, 0, 0) 78%
+            );
+        filter: blur(16px);
+        opacity: 0.9;
+        pointer-events: none;
     }
 
     .drum-container :global(canvas) {
         display: block;
         width: 100% !important;
         height: 100% !important;
+    }
+
+    @media (max-width: 991px) {
+        .drum-shadow {
+            bottom: 22%;
+            width: min(56vw, 360px);
+            height: min(16vw, 110px);
+            filter: blur(14px);
+        }
     }
 </style>

@@ -73,7 +73,7 @@
 
     @media screen and (max-width: 991px) {
         .text {
-            padding: 0.5rem;
+            padding: 0.8rem;
         }
     }
 

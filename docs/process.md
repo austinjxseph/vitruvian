@@ -1,5 +1,60 @@
 # Process Log
 
+## Motion State Body Attribute Rename (2026-04-06)
+
+### What was done
+Renamed the global body-level motion flag from a boolean `data-motion-stagger-disabled` attribute to `data-motion-state="enabled|disabled"`.
+
+### What the problem was
+The old attribute encoded only one stagger-specific disabled state, which made the motion contract less expressive now that the shared motion bootstrap controls more than just text stagger behavior.
+
+### What fixed it
+Updated the body output in `site/snippets/head.php` to emit `data-motion-state` and changed the motion gate in `assets/js/script.js` to treat `data-motion-state="disabled"` as the CMS-driven opt-out signal.
+
+## Responsive Motion Reinitialization (2026-04-06)
+
+### What was done
+Refactored the global motion bootstrap so desktop-only animations can tear down and reinitialize live when the viewport crosses the tablet breakpoint or when responsive layout shifts require SplitText to be rebuilt.
+
+### What the problem was
+The earlier desktop gate only applied on initial page load, so resizing across the breakpoint could leave Lenis, Barba, and SplitText running in the wrong mode, while text that had already been split into line wrappers could keep stale line breaks after responsive width changes.
+
+### What fixed it
+Rewrote `assets/js/script.js` around a shared responsive motion lifecycle that watches breakpoint changes, window resize, and relevant DOM mutations; tears down Lenis and Barba on tablet/mobile; reverts SplitText markup when leaving desktop; and rebuilds stagger line structure without replaying the full animation on layout refreshes.
+
+## Desktop-Only Motion Gating (2026-04-06)
+
+### What was done
+Restricted the global text stagger, Lenis smooth scrolling, and Barba transition system to desktop viewports only.
+
+### What the problem was
+The shared `script.js` motion lifecycle ran on all devices, so tablet and mobile users still received SplitText reveals, Lenis scroll behavior, and Barba-driven opacity transitions instead of a simpler static browsing experience.
+
+### What fixed it
+Added a shared desktop breakpoint gate in `assets/js/script.js` and used it to make the stagger system skip at `991px` and below, while also preventing Lenis and Barba from initializing on non-desktop devices so those viewports fall back to native scrolling and normal page loads.
+
+## Project Block Image Width Fix (2026-04-06)
+
+### What was done
+Updated the `b-img` Svelte block so its custom-element host and internal section explicitly stretch to full width, with the project page namespace covered directly inside the block styles.
+
+### What the problem was
+Project pages render `b-img` blocks directly from the Kirby template instead of through the text layout wrapper, and the block component did not declare a hydrated `b-img` host display mode, which could leave the custom element behaving like an inline box and stop the image block from reliably filling its parent width.
+
+### What fixed it
+Added `:global(b-img)` block-level sizing rules and a project-page-specific stretch rule in `svelte/src/components/blocks/BlockImage.svelte`, plus explicit `width: 100%` on the block section/grid so the component fills the available project content column consistently after hydration.
+
+## Preloader Drum Depth Cues (2026-04-06)
+
+### What was done
+Added shader-based directional lighting, a subtle rim/specular pass, and a soft contact shadow under the preloader drum so the rotating wheel reads with more depth.
+
+### What the problem was
+The preloader wheel used a custom `ShaderMaterial` that only sampled the image textures and dimmed cards past the horizon, so the drum had no scene light response or grounding shadow and looked visually flat.
+
+### What fixed it
+Updated `svelte/src/components/ui/Drum.svelte` so the vertex shader now exports a curved cylinder normal and view vector, the fragment shader applies wrapped diffuse light plus restrained highlight/rim cues, and the component renders an elliptical shadow layer beneath the canvas to anchor the wheel in space.
+
 ## Global Above-Fold Text Stagger (2026-04-05)
 
 ### What was done

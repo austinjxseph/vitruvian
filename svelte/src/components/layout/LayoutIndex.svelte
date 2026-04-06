@@ -504,7 +504,24 @@
     h1 :global(i),
     h1 :global(.u-font-accent),
     h1 :global(span) {
+        font-size: 2.25rem;
         font-family: var(--typeface--tertiary);
         font-style: italic;
+    }
+
+    @media screen and (max-width: 479px) {
+        h1 :global(em),
+        h1 :global(i),
+        h1 :global(.u-font-accent),
+        h1 :global(span) {
+            font-size: 1.8rem;
+            font-family: var(--typeface--tertiary);
+            font-style: italic;
+        }
+
+        .eyebrow-text {
+            font-size: var(--paragraph--font-size-m);
+            line-height: var(--paragraph--line-height-m);
+        }
     }
 </style>

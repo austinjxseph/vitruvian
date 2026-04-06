@@ -1,9 +1,37 @@
 document.addEventListener("DOMContentLoaded", function () {
   "use strict";
 
+  var DESKTOP_MIN_WIDTH = 992;
+  var currentMotionMode = null;
+  var hasBootstrappedOnce = false;
+  var isBarbaInitialized = false;
+  var navigationHandlersBound = false;
+  var responsiveMutationObserver = null;
+  var responsiveResizeTimer = 0;
+  var responsiveMediaQuery = null;
+  var activeStaggerObservers = new Set();
+  var activeStaggerTimeouts = new Set();
+  var suspendResponsiveMutationUntil = 0;
+  var lenisTickerCallback = null;
+  var lenisRafId = 0;
+  var lenisSvelteReadyHandler = null;
+  var lenisLoadHandler = null;
+
+  function isDesktopViewport() {
+    return (
+      !window.matchMedia ||
+      window.matchMedia("(min-width: " + DESKTOP_MIN_WIDTH + "px)").matches
+    );
+  }
+
+  function shouldUseAnimatedExperience() {
+    return isDesktopViewport();
+  }
+
   function shouldSkipStagger() {
     return (
-      document.body.getAttribute("data-motion-stagger-disabled") === "true" ||
+      !shouldUseAnimatedExperience() ||
+      document.body.getAttribute("data-motion-state") === "disabled" ||
       (window.matchMedia &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches)
     );
@@ -20,6 +48,47 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     return true;
+  }
+
+  function suspendResponsiveMutation(ms) {
+    suspendResponsiveMutationUntil = Math.max(
+      suspendResponsiveMutationUntil,
+      Date.now() + (ms || 0),
+    );
+  }
+
+  function registerStaggerObserver(observer) {
+    if (observer) activeStaggerObservers.add(observer);
+    return observer;
+  }
+
+  function unregisterStaggerObserver(observer) {
+    if (!observer) return;
+    observer.disconnect();
+    activeStaggerObservers.delete(observer);
+  }
+
+  function registerStaggerTimeout(timeoutId) {
+    if (timeoutId) activeStaggerTimeouts.add(timeoutId);
+    return timeoutId;
+  }
+
+  function unregisterStaggerTimeout(timeoutId) {
+    if (!timeoutId) return;
+    clearTimeout(timeoutId);
+    activeStaggerTimeouts.delete(timeoutId);
+  }
+
+  function clearTrackedStaggerWork() {
+    activeStaggerObservers.forEach(function (observer) {
+      observer.disconnect();
+    });
+    activeStaggerObservers.clear();
+
+    activeStaggerTimeouts.forEach(function (timeoutId) {
+      clearTimeout(timeoutId);
+    });
+    activeStaggerTimeouts.clear();
   }
 
   function setStaggerLoading(active) {
@@ -48,7 +117,31 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  function prepareStaggerElement(element) {
+  function revertStaggerElement(element) {
+    if (!element || !element.__staggerSplit) return;
+
+    if (typeof gsap !== "undefined") {
+      gsap.killTweensOf(element.__staggerSplit.lines);
+    }
+
+    element.__staggerSplit.revert();
+    delete element.__staggerSplit;
+  }
+
+  function revertAllStaggers(root) {
+    var scope = root || document;
+
+    Array.prototype.forEach.call(
+      scope.querySelectorAll("[data-motion-stagger]"),
+      function (element) {
+        revertStaggerElement(element);
+      },
+    );
+
+    setStaggerLoading(false);
+  }
+
+  function prepareStaggerElement(element, options) {
     if (element.__staggerSplit) return element.__staggerSplit;
 
     var split = SplitText.create(element, {
@@ -67,7 +160,12 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    gsap.set(split.lines, { opacity: 0 });
+    if (options && options.hideLines === false) {
+      gsap.set(split.lines, { opacity: 1, clearProps: "opacity" });
+    } else {
+      gsap.set(split.lines, { opacity: 0 });
+    }
+
     element.__staggerSplit = split;
 
     return split;
@@ -118,6 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var scope = root || document;
     var observer = null;
+    var disconnectTimeout = 0;
 
     function prepareVisibleTargets() {
       getStaggerTargets(scope).forEach(function (element) {
@@ -127,54 +226,73 @@ document.addEventListener("DOMContentLoaded", function () {
 
     prepareVisibleTargets();
 
-    observer = new MutationObserver(function () {
-      prepareVisibleTargets();
-    });
+    observer = registerStaggerObserver(
+      new MutationObserver(function () {
+        if (Date.now() < suspendResponsiveMutationUntil) return;
+        prepareVisibleTargets();
+      }),
+    );
 
     observer.observe(scope, {
       childList: true,
       subtree: true,
     });
 
-    window.setTimeout(function () {
-      if (observer) observer.disconnect();
-    }, 1500);
+    disconnectTimeout = registerStaggerTimeout(
+      window.setTimeout(function () {
+        unregisterStaggerObserver(observer);
+        activeStaggerTimeouts.delete(disconnectTimeout);
+      }, 1500),
+    );
 
     return {
       disconnect: function () {
-        if (observer) observer.disconnect();
+        unregisterStaggerObserver(observer);
+        unregisterStaggerTimeout(disconnectTimeout);
       },
     };
   }
 
   function queueStagger(root) {
     var scope = root || document;
-    var run = function () {
+
+    function run() {
       requestAnimationFrame(function () {
         if (getStaggerTargets(scope).length) {
           initStagger(scope);
           return;
         }
 
-        var observer = new MutationObserver(function () {
-          if (!getStaggerTargets(scope).length) return;
+        var observer = null;
+        var disconnectTimeout = 0;
 
-          observer.disconnect();
-          requestAnimationFrame(function () {
-            initStagger(scope);
-          });
-        });
+        observer = registerStaggerObserver(
+          new MutationObserver(function () {
+            if (Date.now() < suspendResponsiveMutationUntil) return;
+            if (!getStaggerTargets(scope).length) return;
+
+            unregisterStaggerObserver(observer);
+            unregisterStaggerTimeout(disconnectTimeout);
+
+            requestAnimationFrame(function () {
+              initStagger(scope);
+            });
+          }),
+        );
 
         observer.observe(scope, {
           childList: true,
           subtree: true,
         });
 
-        window.setTimeout(function () {
-          observer.disconnect();
-        }, 1500);
+        disconnectTimeout = registerStaggerTimeout(
+          window.setTimeout(function () {
+            unregisterStaggerObserver(observer);
+            activeStaggerTimeouts.delete(disconnectTimeout);
+          }, 1500),
+        );
       });
-    };
+    }
 
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(run);
@@ -184,8 +302,87 @@ document.addEventListener("DOMContentLoaded", function () {
     run();
   }
 
-  // --- Lenis smooth scroll ---
-  (function initLenis() {
+  function rebuildStaggerLayout(root, animate) {
+    var scope = root || document;
+
+    clearTrackedStaggerWork();
+    revertAllStaggers(scope);
+
+    if (shouldSkipStagger() || !canUseStagger()) return;
+
+    suspendResponsiveMutation(500);
+
+    if (animate) {
+      var staggerPrep = primeStagger(scope);
+      staggerPrep.disconnect();
+      queueStagger(scope);
+      return;
+    }
+
+    getStaggerTargets(scope).forEach(function (element) {
+      prepareStaggerElement(element, { hideLines: false });
+    });
+  }
+
+  function initNavigationExitRouting() {
+    if (navigationHandlersBound) return;
+    navigationHandlersBound = true;
+
+    function handleAnimatedNavigation(e) {
+      if (!e.detail || !e.detail.url) return;
+
+      if (
+        shouldUseAnimatedExperience() &&
+        isBarbaInitialized &&
+        typeof barba !== "undefined"
+      ) {
+        barba.go(e.detail.url);
+        return;
+      }
+
+      window.location.href = e.detail.url;
+    }
+
+    document.addEventListener("reel:exit", handleAnimatedNavigation);
+    document.addEventListener("strip:exit", handleAnimatedNavigation);
+  }
+
+  function teardownLenis() {
+    if (lenisSvelteReadyHandler) {
+      window.removeEventListener("svelte:ready", lenisSvelteReadyHandler);
+      lenisSvelteReadyHandler = null;
+    }
+
+    if (lenisLoadHandler) {
+      window.removeEventListener("load", lenisLoadHandler);
+      lenisLoadHandler = null;
+    }
+
+    if (
+      typeof gsap !== "undefined" &&
+      gsap.ticker &&
+      typeof gsap.ticker.remove === "function" &&
+      lenisTickerCallback
+    ) {
+      gsap.ticker.remove(lenisTickerCallback);
+      lenisTickerCallback = null;
+    }
+
+    if (lenisRafId) {
+      cancelAnimationFrame(lenisRafId);
+      lenisRafId = 0;
+    }
+
+    if (window.lenis && typeof window.lenis.destroy === "function") {
+      window.lenis.destroy();
+    }
+
+    window.lenis = undefined;
+  }
+
+  function initLenis() {
+    if (!shouldUseAnimatedExperience() || window.lenis) return;
+
     if (typeof Lenis === "undefined") {
       console.warn("Lenis library not loaded. Smooth scrolling disabled.");
       return;
@@ -197,96 +394,107 @@ document.addEventListener("DOMContentLoaded", function () {
       lerp: 0.12,
     });
 
-    // Integrate with GSAP ticker if available
     if (typeof gsap !== "undefined" && gsap.ticker) {
-      gsap.ticker.add(function (time) {
+      lenisTickerCallback = function (time) {
         lenis.raf(time * 1000);
-      });
+      };
+      gsap.ticker.add(lenisTickerCallback);
       gsap.ticker.lagSmoothing(0);
     } else {
-      // Fallback to rAF loop
       function raf(time) {
         lenis.raf(time);
-        requestAnimationFrame(raf);
+        lenisRafId = requestAnimationFrame(raf);
       }
-      requestAnimationFrame(raf);
+
+      lenisRafId = requestAnimationFrame(raf);
     }
 
-    // Integrate with ScrollTrigger if available
     if (typeof ScrollTrigger !== "undefined") {
       lenis.on("scroll", ScrollTrigger.update);
     }
 
-    // Expose globally
     window.lenis = lenis;
-
-    // Signal ready for components that load later
     window.dispatchEvent(new CustomEvent("lenis:ready"));
 
-    // Refresh Lenis dimensions after Svelte components hydrate
-    // (components add height to the page that Lenis needs to measure)
-    window.addEventListener(
-      "svelte:ready",
-      function () {
-        requestAnimationFrame(function () {
-          lenis.resize();
-          if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
-        });
-      },
-      { once: true },
-    );
+    lenisSvelteReadyHandler = function () {
+      requestAnimationFrame(function () {
+        lenis.resize();
+        if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
+      });
+    };
 
-    // Also refresh after all images have loaded (belt and suspenders)
-    window.addEventListener("load", function () {
+    lenisLoadHandler = function () {
       lenis.resize();
       if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
-    });
-  })();
+    };
 
-  // --- Barba.js page transitions ---
-  (function initBarba() {
-    if (typeof barba === "undefined" || typeof gsap === "undefined") return;
-
-    // Listen for canvas component clicks — route through Barba instead of window.location
-    document.addEventListener("reel:exit", function (e) {
-      barba.go(e.detail.url);
+    window.addEventListener("svelte:ready", lenisSvelteReadyHandler, {
+      once: true,
     });
-    document.addEventListener("strip:exit", function (e) {
-      barba.go(e.detail.url);
-    });
+    window.addEventListener("load", lenisLoadHandler);
+  }
 
-    // --- Initial load: preloader or immediate reveal ---
+  function runInitialDesktopExperience() {
     var mainEl = document.querySelector("[data-barba='container']");
-    if (mainEl) {
-      gsap.set(mainEl, { opacity: 0 });
-    }
+    if (!mainEl || typeof gsap === "undefined") return;
 
-    var hasPreloader = !!document.querySelector("c-preloader");
-    if (hasPreloader) {
+    gsap.set(mainEl, { opacity: 0 });
+
+    if (document.querySelector("c-preloader")) {
       window.addEventListener(
         "preloader:exit",
         function () {
-          if (mainEl) {
-            var staggerPrep = primeStagger(mainEl);
-            gsap.to(mainEl, {
-              opacity: 1,
-              duration: 0.4,
-              delay: 0.1,
-              ease: "power2.out",
-              onComplete: function () {
-                staggerPrep.disconnect();
-                queueStagger(mainEl);
-              },
-            });
-          }
+          var staggerPrep = primeStagger(mainEl);
+          gsap.to(mainEl, {
+            opacity: 1,
+            duration: 0.4,
+            delay: 0.1,
+            ease: "power2.out",
+            onComplete: function () {
+              staggerPrep.disconnect();
+              queueStagger(mainEl);
+            },
+          });
         },
         { once: true },
       );
-    } else if (mainEl) {
-      var initialStaggerPrep = primeStagger(mainEl);
-      gsap.set(mainEl, { opacity: 1 });
-      initialStaggerPrep.disconnect();
-      queueStagger(mainEl);
+      return;
+    }
+
+    gsap.set(mainEl, { opacity: 1 });
+    rebuildStaggerLayout(mainEl, true);
+  }
+
+  function teardownBarba() {
+    if (
+      isBarbaInitialized &&
+      typeof barba !== "undefined" &&
+      typeof barba.destroy === "function"
+    ) {
+      barba.destroy();
+    }
+
+    isBarbaInitialized = false;
+  }
+
+  function initBarba(skipInitialReveal) {
+    if (
+      !shouldUseAnimatedExperience() ||
+      isBarbaInitialized ||
+      typeof barba === "undefined" ||
+      typeof gsap === "undefined"
+    ) {
+      return;
+    }
+
+    if (skipInitialReveal) {
+      var currentContainer = document.querySelector("[data-barba='container']");
+      if (currentContainer) {
+        currentContainer.style.opacity = "1";
+        rebuildStaggerLayout(currentContainer, false);
+      }
+    } else {
+      runInitialDesktopExperience();
     }
 
     barba.init({
@@ -349,5 +557,119 @@ document.addEventListener("DOMContentLoaded", function () {
         },
       ],
     });
-  })();
+
+    isBarbaInitialized = true;
+  }
+
+  function refreshMotionSystems(force) {
+    var shouldAnimate = shouldUseAnimatedExperience();
+    var didModeChange = force || currentMotionMode !== shouldAnimate;
+
+    if (didModeChange) {
+      currentMotionMode = shouldAnimate;
+
+      if (!shouldAnimate) {
+        teardownBarba();
+        teardownLenis();
+        clearTrackedStaggerWork();
+        revertAllStaggers(document);
+
+        var staticContainer = document.querySelector("[data-barba='container']");
+        if (staticContainer) staticContainer.style.opacity = "1";
+
+        hasBootstrappedOnce = true;
+        return;
+      }
+
+      initLenis();
+      initBarba(hasBootstrappedOnce);
+    }
+
+    if (shouldAnimate && !didModeChange) {
+      var activeContainer = document.querySelector("[data-barba='container']");
+      if (activeContainer) {
+        rebuildStaggerLayout(activeContainer, false);
+      }
+
+      if (window.lenis) window.lenis.resize();
+      if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
+    }
+
+    hasBootstrappedOnce = true;
+  }
+
+  function observeResponsiveMotion() {
+    if (responsiveMutationObserver || !document.body) return;
+
+    function scheduleRefresh(force) {
+      clearTimeout(responsiveResizeTimer);
+      responsiveResizeTimer = window.setTimeout(function () {
+        refreshMotionSystems(!!force);
+      }, 180);
+    }
+
+    if (window.matchMedia) {
+      responsiveMediaQuery = window.matchMedia(
+        "(min-width: " + DESKTOP_MIN_WIDTH + "px)",
+      );
+
+      if (typeof responsiveMediaQuery.addEventListener === "function") {
+        responsiveMediaQuery.addEventListener("change", function () {
+          scheduleRefresh(true);
+        });
+      } else if (typeof responsiveMediaQuery.addListener === "function") {
+        responsiveMediaQuery.addListener(function () {
+          scheduleRefresh(true);
+        });
+      }
+    }
+
+    window.addEventListener("resize", function () {
+      scheduleRefresh(false);
+    });
+
+    responsiveMutationObserver = new MutationObserver(function (mutations) {
+      if (Date.now() < suspendResponsiveMutationUntil) return;
+
+      var shouldRefresh = mutations.some(function (mutation) {
+        if (mutation.type !== "childList") return false;
+
+        function hasRelevantNode(nodeList) {
+          return Array.prototype.some.call(nodeList, function (node) {
+            if (!node || node.nodeType !== 1) return false;
+
+            if (
+              node.matches &&
+              node.matches("[data-barba='container'], [data-motion-stagger]")
+            ) {
+              return true;
+            }
+
+            return !!(
+              node.querySelector &&
+              node.querySelector("[data-barba='container'], [data-motion-stagger]")
+            );
+          });
+        }
+
+        return (
+          hasRelevantNode(mutation.addedNodes) ||
+          hasRelevantNode(mutation.removedNodes)
+        );
+      });
+
+      if (shouldRefresh) {
+        scheduleRefresh(false);
+      }
+    });
+
+    responsiveMutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  initNavigationExitRouting();
+  refreshMotionSystems(true);
+  observeResponsiveMotion();
 });

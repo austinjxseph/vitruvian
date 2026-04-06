@@ -58,5 +58,5 @@
 <body
   class="body"
   data-barba="wrapper"
-  data-motion-stagger-disabled="<?= $site->disable_motion_stagger()->toBool() ? "true" : "false" ?>"
+  data-motion-state="<?= $site->disable_motion_stagger()->toBool() ? "disabled" : "enabled" ?>"
 >

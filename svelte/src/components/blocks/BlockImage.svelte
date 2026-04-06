@@ -51,6 +51,15 @@
 </section>
 
 <style>
+    :global(b-img) {
+        display: block;
+        align-self: stretch;
+    }
+
+    :global(.page[data-barba-namespace="project"] b-img) {
+        align-self: stretch;
+    }
+
     .grid {
         display: grid;
         gap: var(--gap--md);
