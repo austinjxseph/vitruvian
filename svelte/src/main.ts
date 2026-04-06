@@ -99,4 +99,4 @@ registerSvelteElement("l-holding", LayoutHolding, [
 console.log("Svelte components loaded");
 
 // Signal that all components have been registered and hydrated
-window.dispatchEvent(new CustomEvent("svelte-ready"));
+window.dispatchEvent(new CustomEvent("svelte:ready"));

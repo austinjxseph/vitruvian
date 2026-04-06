@@ -10,13 +10,13 @@
 
 <header class="header" class:is-row={layout === "row"}>
     <div class="heading">
-        <h2>
+        <h2 data-motion-stagger>
             {@html strippedTitle}
         </h2>
     </div>
     {#if description}
         <div class="text">
-            <div class="text-md">
+            <div class="text-md" data-motion-stagger>
                 {@html strippedDescription}
             </div>
         </div>

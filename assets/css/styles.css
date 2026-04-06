@@ -160,11 +160,23 @@ c-footer {
     display: flex;
 }
 
+.body.loading,
+.body.loading * {
+    cursor: wait !important;
+}
+
 .js,
 .css,
 .hide,
 .motion {
     display: none;
+}
+
+.a-stagger {
+    will-change: opacity;
+}
+
+.a-stagger.mask {
 }
 
 .u-layout-vflex {

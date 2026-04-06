@@ -82,7 +82,7 @@
             onStart: () => {
                 document.body.style.cursor = "";
                 // Signal page to start revealing main content (overlaps with fade-out)
-                window.dispatchEvent(new CustomEvent("preloader-done"));
+                window.dispatchEvent(new CustomEvent("preloader:exit"));
             },
             onComplete: () => {
                 // Remove the custom element — triggers Svelte unmount

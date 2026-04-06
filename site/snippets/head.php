@@ -55,4 +55,8 @@
   <link rel="stylesheet" href="/assets/css/svelte.css">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="9623ddbb-c725-4d81-adbf-67d495bbf7df"></script>
 </head>
-<body class="body" data-barba="wrapper">
+<body
+  class="body"
+  data-barba="wrapper"
+  data-motion-stagger-disabled="<?= $site->disable_motion_stagger()->toBool() ? "true" : "false" ?>"
+>

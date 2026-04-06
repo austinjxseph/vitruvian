@@ -19,11 +19,13 @@
                     style={index === 0 ? `grid-column-start: ${offset}` : ""}
                 >
                     {#if item.heading}
-                        <h5>{item.heading}</h5>
+                        <h5 data-motion-stagger>{item.heading}</h5>
                     {:else}
-                        <h5>({String(index + 1).padStart(2, "0")})</h5>
+                        <h5 data-motion-stagger>
+                            ({String(index + 1).padStart(2, "0")})
+                        </h5>
                     {/if}
-                    <div class="text-md">
+                    <div class="text-md" data-motion-stagger>
                         {@html item.description}
                     </div>
                 </div>

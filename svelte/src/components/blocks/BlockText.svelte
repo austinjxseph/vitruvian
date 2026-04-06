@@ -18,9 +18,9 @@
                 style={index === 0 ? `grid-column-start: ${offset}` : ""}
             >
                 {#if item.heading}
-                    <p class="heading">{item.heading}</p>
+                    <p class="heading" data-motion-stagger>{item.heading}</p>
                 {/if}
-                <div class="text-md">
+                <div class="text-md" data-motion-stagger>
                     {@html item.content}
                 </div>
             </div>

@@ -138,3 +138,15 @@ tabs:
                   ratio: 1/1
                 uploads:
                   template: image
+          motion:
+            type: fields
+            label: Motion
+            fields:
+              disable_motion_stagger:
+                type: toggle
+                label: Disable global text stagger
+                text:
+                  - "No"
+                  - "Yes"
+                default: false
+                help: When enabled, page-load line stagger animations are skipped on every page.

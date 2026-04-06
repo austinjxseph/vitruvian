@@ -1,5 +1,137 @@
 # Process Log
 
+## Global Above-Fold Text Stagger (2026-04-05)
+
+### What was done
+Added a new global page-load text stagger flow using GSAP and SplitText, exposed a Kirby globals toggle to disable it site-wide, and tagged the requested Svelte text block elements with `data-motion-stagger`.
+
+### What the problem was
+The site needed a single above-the-fold text reveal sweep on page load, but there was no shared motion hook for line-by-line text splitting and no editor control to skip the effect entirely when needed.
+
+### What fixed it
+Added `initStagger()` to `assets/js/script.js`, loading it after the existing page reveal points so only visible `[data-motion-stagger]` elements are split into masked lines and animated in one global sweep, then wired a `disable_motion_stagger` site toggle through the `<body>` data attributes and updated the `BlockHeader`, `BlockText`, and `BlockGrid` Svelte components to opt into the effect.
+
+## Project Template Stagger Lifecycle Fix (2026-04-05)
+
+### What was done
+Hardened the global stagger queue so it waits briefly for Svelte-rendered block markup to appear before running the SplitText sweep.
+
+### What the problem was
+The `project` template renders block custom elements server-side, but their inner text nodes with `data-motion-stagger` are mounted by Svelte just after the page reveal, so the original one-shot stagger check could run too early and find no targets.
+
+### What fixed it
+Updated `assets/js/script.js` to collect targets through a shared helper and, when none are present yet, attach a short-lived `MutationObserver` to the revealed container so the stagger starts as soon as the Svelte block internals land in the DOM.
+
+## Global Stagger Mask Class Update (2026-04-05)
+
+### What was done
+Adjusted the global SplitText reveal so lines now animate from `yPercent: 100` and use the requested `.a-stagger` / `.a-stagger.mask` class naming.
+
+### What the problem was
+The previous version used a small pixel offset and internal helper class names, which didn’t match the desired masked line-reveal convention.
+
+### What fixed it
+Changed the SplitText line class to `a-stagger`, added `a-stagger mask` to the generated mask wrappers, updated the CSS selectors accordingly, and switched the reveal animation to `yPercent: 100 -> 0` with a global `0.15s` line stagger for a full masked slide-through effect.
+
+## Concurrent Block Stagger Start (2026-04-06)
+
+### What was done
+Changed the page-load text stagger so each tagged text block starts animating at the same time, while the lines inside each block still stagger locally.
+
+### What the problem was
+The previous global line queue made every tagged text element wait for the previous one to finish starting, which stretched the reveal into a long sequential sweep across the page.
+
+### What fixed it
+Updated `assets/js/script.js` so `initStagger()` creates one GSAP tween per split element instead of flattening all lines into a single array, keeping the current `0.4s` duration and `0.15s` line stagger but letting all blocks begin concurrently.
+
+## Stagger Ease Curve Tuning (2026-04-06)
+
+### What was done
+Updated the global masked text reveal to use a stronger custom ease-out curve based on the Emil design-engineering motion guidance.
+
+### What the problem was
+The reveal timing had been tuned, but the previous easing shape still made the line entrances feel heavier and less responsive than intended for an entering UI animation.
+
+### What fixed it
+Changed the GSAP ease in `assets/js/script.js` from a slow-starting curve to `cubic-bezier(0.23, 1, 0.32, 1)`, which gives the lines a faster initial response and a smoother settle while preserving the current duration and stagger values.
+
+## Stagger Softer Travel And Fade (2026-04-06)
+
+### What was done
+Adjusted the masked line reveal to travel a shorter distance and fade in at the same time.
+
+### What the problem was
+Starting the lines too far below the mask made the entrance feel heavier than necessary, and relying on motion alone left the reveal harsher than intended.
+
+### What fixed it
+Updated `assets/js/script.js` so split lines now animate from `yPercent: 60` instead of `100`, while also transitioning `opacity: 0 -> 1` and clearing both transform and opacity after the tween completes.
+
+## Stagger Opacity-Only Variant (2026-04-06)
+
+### What was done
+Created a comparison version of the global line reveal that removes vertical translation and keeps only the line-by-line fade.
+
+### What the problem was
+Even with reduced travel, the masked translate could still contribute visual heaviness, so the next useful comparison was to isolate the effect of timing and easing without positional motion.
+
+### What fixed it
+Updated `assets/js/script.js` so split lines now animate only from `opacity: 0 -> 1`, preserving the current duration, stagger, and custom ease while clearing only opacity after the tween completes.
+
+## Stagger Pre-Prime And No-Mask CSS (2026-04-06)
+
+### What was done
+Removed the active masking CSS while keeping the existing stagger class hooks, and changed the motion lifecycle so above-the-fold stagger targets are prepared before the Barba page reveal completes.
+
+### What the problem was
+The active mask CSS was no longer needed for the opacity-only variant, and the previous stagger flow could allow targets to appear at full opacity briefly before their fade animation was initialized during page transitions.
+
+### What fixed it
+Updated `assets/css/styles.css` so `.a-stagger.mask` remains as a no-op selector, and refactored `assets/js/script.js` to pre-split visible stagger targets, set their line opacity to `0` ahead of time, and then trigger the fade animation only after the page container finishes its Barba or preloader reveal.
+
+## Stagger Full-DOM Targeting (2026-04-06)
+
+### What was done
+Changed the stagger target selection so every eligible text element in the current page container is initialized and animated during the same page-load sequence, not just the ones intersecting the viewport.
+
+### What the problem was
+The viewport-only filter meant below-the-fold stagger elements could still be prepared into a hidden state by the transition lifecycle without ever being selected into the animation pass, leaving them at zero opacity when the user later scrolled to them.
+
+### What fixed it
+Updated `assets/js/script.js` so `getStaggerTargets()` now includes all visible-in-layout `[data-motion-stagger]` nodes in the current DOM scope, allowing the existing page-load sequencer to handle the whole set without introducing scroll-triggered behavior.
+
+## Stagger Mask Wrapper Removal (2026-04-06)
+
+### What was done
+Removed SplitText's line-mask wrapper generation from the stagger setup.
+
+### What the problem was
+Even after neutralizing the mask CSS, the extra wrapper structure created by `mask: "lines"` could still clip text ascenders, descenders, or line boxes and make parts of the copy look visually cropped.
+
+### What fixed it
+Deleted `mask: "lines"` from the SplitText config in `assets/js/script.js`, leaving the stagger classes in place but allowing the opacity-only reveal to run without the additional masking wrappers.
+
+## Stagger Loading State Hooks (2026-04-06)
+
+### What was done
+Added a temporary body loading class and start/stop custom events around the global stagger timeline, plus global cursor CSS for that loading state.
+
+### What the problem was
+The page transition could still feel interactive while the stagger reveal was running, and there was no global lifecycle hook for other code to react to the start and end of the text-load sequence.
+
+### What fixed it
+Updated `assets/js/script.js` so the stagger timeline now toggles `body.loading` and dispatches `stagger:start` / `stagger:done` events, then added global CSS in `assets/css/styles.css` so the cursor switches to `wait` while that class is present.
+
+## Event Naming Convention Cleanup (2026-04-06)
+
+### What was done
+Aligned the global readiness and lifecycle custom event names with the colon-scoped convention already used by the navigation and canvas interactions.
+
+### What the problem was
+The codebase mixed hyphenated readiness events and scoped colon events, which made the stagger hooks feel inconsistent with the rest of the motion lifecycle.
+
+### What fixed it
+Renamed the stagger hooks to `stagger:start` / `stagger:done`, changed `lenis-ready` to `lenis:ready`, changed `svelte-ready` to `svelte:ready`, and changed the preloader handoff event to `preloader:exit`, updating all dispatchers and listeners to match.
+
 ## Home Strip Inertia-Only Active Switching (2026-04-05)
 
 ### What was done
