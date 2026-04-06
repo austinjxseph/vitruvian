@@ -91,7 +91,7 @@
         color: var(--_themes---site--text--text-secondary);
     }
 
-    .col-body :global(text-md) {
+    .col-body :global(b-header) {
         text-align: justify;
     }
 

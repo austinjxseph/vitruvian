@@ -51,7 +51,7 @@
     --typeface--secondary: "EB Garamond Italic", Georgia, serif;
     --typeface--tertiary: "EB Garamond Italic", Georgia, serif;
 
-    --h1--font-size: var(--_units---abs--8);
+    --h1--font-size: var(--_units---abs--7-5);
     --h2--font-size: var(--_units---abs--7);
     --h3--font-size: var(--_units---abs--6);
     --h4--font-size: var(--_units---abs--3-5);
@@ -61,7 +61,7 @@
     --paragraph--font-size-m: var(--_units---abs--3-5);
     --paragraph--font-size-l: var(--_units---abs--4);
 
-    --h1--line-height: var(--_units---rel--1-1-5);
+    --h1--line-height: var(--_units---rel--1-2);
     --h2--line-height: var(--_units---rel--1-2);
     --h3--line-height: var(--_units---rel--1-4);
     --h4--line-height: var(--_units---rel--1-4);
@@ -124,6 +124,7 @@
     --_units---abs--4-5: 1.125rem;
     --_units---abs--5: 1.25rem;
     --_units---abs--7: 1.75rem;
+    --_units---abs--7-5: 1.875rem;
     --_units---abs--8: 2rem;
     --_units---abs--9: 2.25rem;
     --_units---abs--10: 2.5rem;

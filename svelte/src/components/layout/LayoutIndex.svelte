@@ -504,7 +504,7 @@
     h1 :global(i),
     h1 :global(.u-font-accent),
     h1 :global(span) {
-        font-size: 2.25rem;
+        font-size: calc(var(--h1--line-height) * 0.95);
         font-family: var(--typeface--tertiary);
         font-style: italic;
     }
@@ -514,7 +514,7 @@
         h1 :global(i),
         h1 :global(.u-font-accent),
         h1 :global(span) {
-            font-size: 1.8rem;
+            font-size: calc(var(--h1--line-height) * 0.95);
             font-family: var(--typeface--tertiary);
             font-style: italic;
         }
