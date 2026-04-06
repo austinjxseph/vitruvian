@@ -1,5 +1,16 @@
 # Process Log
 
+## Home Strip Shared Active-Line Centering (2026-04-06)
+
+### What was done
+Shifted the home strip's initial active card upward toward the viewport center by seeding the initial strip offset from a lowered NDC target line, while also moving the ongoing active-card detection to that same shared line.
+
+### What the problem was
+The strip originally initialized with project `0` effectively aligned to the viewport center line, which left the first active card reading too low in the composition; changing only the initial visual placement would have risked desynchronizing the left-hand slot from the strip's runtime active-state logic.
+
+### What fixed it
+Updated `svelte/src/components/ui/Strip.svelte` so both the initial strip offset and the per-frame active-card detection use the same `ACTIVE_VIEW_NDC_Y` reference, avoiding a split between visual placement and active-state selection.
+
 ## Motion State Body Attribute Rename (2026-04-06)
 
 ### What was done

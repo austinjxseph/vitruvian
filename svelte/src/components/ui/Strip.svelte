@@ -59,6 +59,7 @@
     const LERP_SPEED = 0.28;
 
     const MOBILE_BREAKPOINT = 991;
+    const ACTIVE_VIEW_NDC_Y = -0.08;
 
     let container = $state<HTMLDivElement>();
     let isMobile = $state(false);
@@ -356,6 +357,25 @@
             );
         }
 
+        function normaliseOffset(offset: number): number {
+            return (
+                ((((offset + halfStrip) % STRIP_LENGTH) + STRIP_LENGTH) %
+                    STRIP_LENGTH) -
+                halfStrip
+            );
+        }
+
+        function getViewYAtNdc(ndcY: number): number {
+            raycaster.setFromCamera(new Vector2(0, ndcY), camera);
+            const { origin, direction } = raycaster.ray;
+            const t = -origin.z / direction.z;
+            return origin.y + t * direction.y;
+        }
+
+        const initialCardBaseY = meshes[0].userData.baseSeatY as number;
+        const initialTargetY = getViewYAtNdc(ACTIVE_VIEW_NDC_Y);
+        stripOffset = normaliseOffset(initialTargetY - initialCardBaseY);
+
         function onWheel(e: WheelEvent) {
             e.preventDefault();
             stripVelocity += e.deltaY * WHEEL_SENSITIVITY;
@@ -416,7 +436,7 @@
             animationId = requestAnimationFrame(animate);
 
             // Viewport centre in world Y — used to determine the active card
-            raycaster.setFromCamera(new Vector2(0, 0), camera);
+            raycaster.setFromCamera(new Vector2(0, ACTIVE_VIEW_NDC_Y), camera);
             const _r = raycaster.ray;
             const _t = -_r.origin.z / _r.direction.z;
             const viewCentreY = _r.origin.y + _t * _r.direction.y;
