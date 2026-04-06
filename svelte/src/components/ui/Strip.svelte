@@ -35,7 +35,7 @@
     const CARD_HEIGHT = 4.2 * CARD_SCALE;
     const CARD_GAP = 0.28;
     const CARD_SPACING = CARD_HEIGHT + CARD_GAP;
-    const DEPTH_TAPER = 0.22;
+    const DEPTH_TAPER = 0;
     const TAPER_RANGE = CARD_SPACING * 4;
 
     const CAMERA_X = 4;
