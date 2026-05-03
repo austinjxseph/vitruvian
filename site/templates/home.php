@@ -9,6 +9,7 @@ $projectsData = [];
 foreach ($page->featured_projects()->toPages() as $project) {
     $projectsData[] = [
         "url" => $project->url(),
+        "name" => $project->title()->value(),
         "title" => $project->project_title()->value(),
         "thumbnail_base" => $project->thumbnail_base()->toFile()?->url() ?? "",
         "thumbnail_overlay" =>

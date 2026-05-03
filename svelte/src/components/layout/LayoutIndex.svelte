@@ -21,6 +21,7 @@
         buttonhref?: string;
         projects?: Array<{
             url: string;
+            name?: string;
             title: string;
             thumbnail_base: string;
             thumbnail_overlay: string;
@@ -28,15 +29,14 @@
     } = $props();
 
     let trackEl: HTMLDivElement;
-    let slotRoot: HTMLElement;
 
     const stripId = "strip-" + Math.random().toString(36).slice(2, 8);
 
-    // Slot config
-    const ROW_HEIGHT = 32;
-    const TOP_OFFSET = ROW_HEIGHT; // push active row below the top fade zone
-    const TWEEN_DURATION = 0.35;
-    const cardCount = $derived(projects.length);
+    let centerIndex = $state(0);
+    let hoveredIndex = $state(-1);
+    const activeIndex = $derived(
+        hoveredIndex !== -1 ? hoveredIndex : centerIndex,
+    );
     const normalizedAvailabilityStatus = $derived.by(() => {
         if (availabilitystatus === "hold" || availabilitystatus === "on_hold") {
             return "hold";
@@ -51,111 +51,23 @@
 
         return "available";
     });
-    // 3 copies for infinite scroll runway
-    const slotItems = $derived(
-        Array.from({ length: 3 }, () => projects).flat(),
-    );
-
-    let lastIndex = -1;
-    let continuousPos = 0;
 
     onMount(() => {
-        if (cardCount === 0) return;
+        if (projects.length === 0) return;
 
-        // Resolve GSAP targets from data attributes scoped to this component
-        slotRoot = trackEl.closest(".section-hr")!;
-        const innerEl = slotRoot.querySelector("[data-slot-inner]");
-        const itemEls = slotRoot.querySelectorAll("[data-slot-item]");
-
-        if (!innerEl || !itemEls.length) return;
-
-        continuousPos = cardCount;
-
-        function posToY(pos: number) {
-            return -pos * ROW_HEIGHT + TOP_OFFSET;
-        }
-
-        // Set initial position instantly
-        gsap.set(innerEl, { y: posToY(continuousPos) });
-        updateOpacities(continuousPos);
-
-        function updateOpacities(pos: number) {
-            itemEls.forEach((el, i) => {
-                const dist = i - pos;
-                if (Math.abs(dist) > 3) {
-                    gsap.set(el, { opacity: 0 });
-                    return;
-                }
-                let opacity = 0;
-                if (dist === -1) opacity = 0.2;
-                else if (dist === 0) opacity = 1;
-                else if (dist === 1) opacity = 0.4;
-                else if (dist === 2) opacity = 0.15;
-                else if (dist === 3) opacity = 0.05;
-                gsap.to(el, {
-                    opacity,
-                    duration: TWEEN_DURATION,
-                    ease: "power2.out",
-                    overwrite: true,
-                });
-            });
-        }
-
-        function resetToCenter() {
-            const normalised =
-                ((continuousPos % cardCount) + cardCount) % cardCount;
-            const centerPos = cardCount + normalised;
-            if (continuousPos === centerPos) return;
-            gsap.killTweensOf(innerEl);
-            gsap.set(innerEl, { y: posToY(centerPos) });
-            continuousPos = centerPos;
-        }
-
-        function onActiveCard(e: Event) {
+        const onUpdate = (e: Event) => {
             const detail = (e as CustomEvent).detail;
-            const newIndex = detail?.index;
-            if (newIndex == null || cardCount === 0) return;
-
-            if (lastIndex === -1) {
-                lastIndex = newIndex;
-                continuousPos = cardCount + newIndex;
-                gsap.set(innerEl, { y: posToY(continuousPos) });
-                updateOpacities(continuousPos);
-                return;
-            }
-
-            // Shortest step with wrapping
-            let delta = newIndex - lastIndex;
-            if (delta > cardCount / 2) delta -= cardCount;
-            if (delta < -cardCount / 2) delta += cardCount;
-            lastIndex = newIndex;
-
-            // Reset to center copy if approaching boundary
-            if (
-                continuousPos + delta < 0 ||
-                continuousPos + delta >= cardCount * 3
-            ) {
-                resetToCenter();
-            }
-
-            continuousPos += delta;
-
-            // Animate scroll — overwrites any in-progress tween seamlessly
-            gsap.to(innerEl, {
-                y: posToY(continuousPos),
-                duration: TWEEN_DURATION,
-                ease: "power2.out",
-                overwrite: true,
-            });
-
-            updateOpacities(continuousPos);
-        }
-
-        trackEl?.addEventListener("strip:update", onActiveCard);
+            if (detail?.index != null) centerIndex = detail.index;
+        };
+        const onHover = (e: Event) => {
+            const detail = (e as CustomEvent).detail;
+            if (detail?.index != null) hoveredIndex = detail.index;
+        };
+        trackEl?.addEventListener("strip:update", onUpdate);
+        trackEl?.addEventListener("strip:hover", onHover);
         return () => {
-            trackEl?.removeEventListener("strip:update", onActiveCard);
-            gsap.killTweensOf(innerEl);
-            gsap.killTweensOf(itemEls);
+            trackEl?.removeEventListener("strip:update", onUpdate);
+            trackEl?.removeEventListener("strip:hover", onHover);
         };
     });
 </script>
@@ -166,30 +78,6 @@
             <div class="inner" data-canvas-map>
                 <div class="wrap">
                     <div class="text">
-                        {#if projects.length}
-                            <div class="slot">
-                                <div
-                                    class="slot-marker"
-                                    style="height: {ROW_HEIGHT}px; margin-top: {TOP_OFFSET}px"
-                                >
-                                    <div class="slot-marker-pip"></div>
-                                </div>
-                                <div class="slot-window">
-                                    <div class="slot-inner" data-slot-inner>
-                                        {#each slotItems as project, i}
-                                            <a
-                                                href={project.url}
-                                                class="slot-item"
-                                                data-slot-item
-                                                style="height: {ROW_HEIGHT}px"
-                                            >
-                                                {project.title}
-                                            </a>
-                                        {/each}
-                                    </div>
-                                </div>
-                            </div>
-                        {/if}
                         <div class="heading">
                             <div class="heading-text">
                                 <div class="eyebrow">
@@ -212,6 +100,14 @@
                 </div>
 
                 <div class="track" bind:this={trackEl}>
+                    {#if projects.length}
+                        <div class="info" aria-hidden="true">
+                            <span class="u-text-secondary"
+                                >{projects[activeIndex]?.name}</span
+                            >
+                            <span>{projects[activeIndex]?.title}</span>
+                        </div>
+                    {/if}
                     <c-strip id={stripId}></c-strip>
                     {@html `<script type="application/json" data-for="${stripId}">${JSON.stringify({ projects }).replace(/<\//g, "<\\/")}<\/script>`}
                 </div>
@@ -302,7 +198,7 @@
     .text {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: flex-start;
         padding-right: var(--global--margin);
         padding-left: var(--global--margin);
@@ -329,10 +225,34 @@
         flex: 1;
         align-self: stretch;
         max-width: calc(100dvh - 2 * var(--padding--lg));
-        padding-right: 48px;
+        padding-right: 24px;
         position: relative;
         height: 100dvh;
         isolation: isolate;
+    }
+
+    /* Bottom-aligned label inside the canvas wrapper */
+    .info {
+        position: absolute;
+        bottom: var(--_units---abs--24);
+        left: 0;
+        right: 24px;
+        z-index: 3;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--gap--xxs);
+        font-size: var(--h4--font-size, 1.25rem);
+        font-weight: 400;
+        line-height: var(--h4--line-height, 1.4);
+        color: var(--_themes---site--text--text-primary);
+    }
+
+    @media screen and (max-width: 991px) {
+        .info {
+            display: none;
+        }
     }
 
     .track :global(c-strip) {
@@ -375,74 +295,6 @@
         }
 
         .track::after {
-            display: none;
-        }
-    }
-
-    /* Slot title list */
-    .slot {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        position: relative;
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-    }
-
-    /* Marker column — same height as one row, centers the pip vertically */
-    .slot-marker {
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-    }
-
-    .slot-marker-pip {
-        background-color: var(--_themes---site--text--text-primary);
-        border-radius: 24px;
-        width: 18px;
-        height: 4px;
-    }
-
-    /* Scrolling window — fades top and bottom */
-    .slot-window {
-        overflow: hidden;
-        height: 160px;
-        position: relative;
-        mask-image: linear-gradient(
-            to bottom,
-            transparent 0%,
-            #000 20%,
-            #000 25%,
-            transparent 100%
-        );
-        -webkit-mask-image: linear-gradient(
-            to bottom,
-            transparent 0%,
-            #000 20%,
-            #000 25%,
-            transparent 100%
-        );
-    }
-
-    .slot-inner {
-        display: flex;
-        flex-direction: column;
-        will-change: transform;
-    }
-
-    .slot-item {
-        display: flex;
-        align-items: center;
-        font-size: var(--h4--font-size, 1.25rem);
-        font-weight: 400;
-        color: var(--_themes---site--text--text-primary);
-        text-decoration: none;
-        white-space: nowrap;
-        opacity: 0;
-    }
-
-    @media screen and (max-width: 991px) {
-        .slot {
             display: none;
         }
     }

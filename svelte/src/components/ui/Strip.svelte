@@ -23,6 +23,7 @@
     }: {
         projects?: Array<{
             url: string;
+            name?: string;
             title: string;
             thumbnail_base: string;
             thumbnail_overlay: string;
@@ -274,6 +275,26 @@
         let hoveredMeshIndex = -1;
         let isAnyHovered = false;
         let lastMouseEvent: MouseEvent | null = null;
+        let lastHoveredProjectIndex = -1;
+
+        function dispatchHover(projectIndex: number) {
+            if (projectIndex === lastHoveredProjectIndex) return;
+            lastHoveredProjectIndex = projectIndex;
+            const host = container?.closest("c-strip");
+            if (!host) return;
+            host.dispatchEvent(
+                new CustomEvent("strip:hover", {
+                    bubbles: true,
+                    detail: {
+                        project:
+                            projectIndex === -1
+                                ? null
+                                : projects[projectIndex],
+                        index: projectIndex,
+                    },
+                }),
+            );
+        }
 
         function updateHover(e: MouseEvent) {
             if (!container) return;
@@ -289,10 +310,12 @@
                 hoveredMeshIndex = hit.userData.meshIndex;
                 isAnyHovered = true;
                 container.style.cursor = "pointer";
+                dispatchHover(hit.userData.projectIndex as number);
             } else {
                 hoveredMeshIndex = -1;
                 isAnyHovered = false;
                 container.style.cursor = "default";
+                dispatchHover(-1);
             }
         }
 
@@ -306,6 +329,7 @@
             hoveredMeshIndex = -1;
             isAnyHovered = false;
             if (container) container.style.cursor = "default";
+            dispatchHover(-1);
         }
 
         function onClick(e: MouseEvent) {

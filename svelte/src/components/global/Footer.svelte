@@ -8,27 +8,6 @@
     } = $props();
 
     const currentYear = new Date().getFullYear();
-
-    let time = $state("");
-
-    function updateTime() {
-        const now = new Date();
-        time = now
-            .toLocaleTimeString("en-GB", {
-                timeZone: "Europe/London",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: true,
-            })
-            .toUpperCase();
-    }
-
-    $effect(() => {
-        updateTime();
-        const interval = setInterval(updateTime, 1000);
-        return () => clearInterval(interval);
-    });
 </script>
 
 <footer class="footer" class:abs={fixed}>
@@ -41,10 +20,6 @@
                         © <span>{currentYear}</span> Austin Joseph.
                     </div>
                 </div>
-            </div>
-            <div class="location">
-                <span class="location-label">London, England</span>
-                <span class="location-time">[{time}]</span>
             </div>
             <ul role="list" class="row">
                 {#each links as link}
@@ -135,14 +110,13 @@
         margin-left: auto;
         margin-right: auto;
         display: grid;
-        grid-template-columns: 1fr auto 1fr;
+        grid-template-columns: 1fr 1fr;
         align-items: center;
         gap: 24px;
     }
 
     @media screen and (max-width: 991px) {
         .inner {
-            grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
     }
@@ -177,34 +151,6 @@
 
     .row:last-child {
         justify-content: flex-end;
-    }
-
-    .location {
-        display: flex;
-        flex-flow: row;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-
-    .location-label {
-        font-family: var(--typeface--primary);
-        font-size: var(--paragraph--font-size-s);
-        line-height: var(--paragraph--line-height-s);
-        color: var(--_themes---site--text--text-primary);
-    }
-
-    .location-time {
-        font-family: var(--typeface--primary);
-        font-size: var(--paragraph--font-size-s);
-        line-height: var(--paragraph--line-height-s);
-        color: var(--_themes---site--text--text-secondary);
-    }
-
-    @media screen and (max-width: 991px) {
-        .location {
-            display: none;
-        }
     }
 
     .link {
