@@ -30,7 +30,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN a2enmod rewrite headers expires
 
 # Tune MPM prefork to handle more concurrent connections
-COPY apache-mpm.conf /etc/apache2/conf-available/mpm-tuning.conf
+COPY apache.conf /etc/apache2/conf-available/mpm-tuning.conf
 RUN a2enconf mpm-tuning
 
 # Set document root to Kirby directory

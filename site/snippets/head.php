@@ -48,11 +48,11 @@
   <?php endforeach; ?>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="/assets/css/normalize.css">
-  <link rel="stylesheet" href="/assets/css/variables.css">
-  <link rel="stylesheet" href="/assets/css/styles.css">
-  <link rel="stylesheet" href="/assets/css/keyframes.css">
-  <link rel="stylesheet" href="/assets/css/svelte.css">
+  <link rel="stylesheet" href="<?= versionedAsset('/assets/css/normalize.css') ?>">
+  <link rel="stylesheet" href="<?= versionedAsset('/assets/css/variables.css') ?>">
+  <link rel="stylesheet" href="<?= versionedAsset('/assets/css/styles.css') ?>">
+  <link rel="stylesheet" href="<?= versionedAsset('/assets/css/keyframes.css') ?>">
+  <link rel="stylesheet" href="<?= versionedAsset('/assets/css/svelte.css') ?>">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="9623ddbb-c725-4d81-adbf-67d495bbf7df"></script>
 </head>
 <body

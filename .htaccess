@@ -71,8 +71,21 @@ ExpiresByType text/html "access plus 0 seconds"
 
 # Cache-Control fallback
 <IfModule mod_headers.c>
-<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico|woff2|woff)$">
-    Header set Cache-Control "public, max-age=31536000, immutable"
+# Kirby /media/ URLs are content-fingerprinted (hash includes mtime),
+# so they're safe to mark immutable — every file change yields a new URL.
+<If "%{REQUEST_URI} =~ m#^/media/#">
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</If>
+<Else>
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=86400, must-revalidate"
+    </FilesMatch>
+</Else>
+# Fonts rarely change and are typically referenced by stable filenames.
+<FilesMatch "\.(woff2|woff)$">
+    Header set Cache-Control "public, max-age=31536000"
 </FilesMatch>
 <FilesMatch "\.(css|js)$">
     Header set Cache-Control "public, max-age=604800"

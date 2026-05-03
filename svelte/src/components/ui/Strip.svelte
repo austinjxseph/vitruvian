@@ -132,8 +132,6 @@
         let isAnimating = false;
         let resizeObserver: ResizeObserver | null = null;
         let disposed = false;
-        let revealTween: any = null;
-        let preloaderExitHandler: (() => void) | null = null;
 
         try {
             renderer = new WebGLRenderer({ antialias: true, alpha: true });
@@ -176,7 +174,6 @@
         const materials: ShaderMaterial[] = [];
         const meshes: Mesh[] = [];
         const targetOpacities: number[] = [];
-        const revealProgress: number[] = [];
 
         const geometry = new PlaneGeometry(CARD_WIDTH, CARD_HEIGHT, 1, 16);
 
@@ -256,45 +253,6 @@
             materials.push(material);
             meshes.push(mesh);
             targetOpacities.push(1.0);
-            revealProgress.push(0);
-        }
-
-        const gsap = (window as typeof window & { gsap?: any }).gsap;
-        function startRevealSequence() {
-            if (!gsap || revealTween) return;
-
-            const revealTargets = revealProgress.map((_, index) => ({
-                index,
-                value: 0,
-            }));
-
-            revealTween = gsap.to(revealTargets, {
-                value: 1,
-                duration: 0.2,
-                ease: "power2.out",
-                stagger: 0.04,
-                onUpdate: () => {
-                    for (const target of revealTargets) {
-                        revealProgress[target.index] = target.value;
-                    }
-                },
-            });
-        }
-
-        if (gsap) {
-            if (document.querySelector("c-preloader")) {
-                preloaderExitHandler = () => {
-                    startRevealSequence();
-                    preloaderExitHandler = null;
-                };
-                window.addEventListener("preloader:exit", preloaderExitHandler, {
-                    once: true,
-                });
-            } else {
-                startRevealSequence();
-            }
-        } else {
-            revealProgress.fill(1);
         }
 
         function updateSize() {
@@ -541,10 +499,9 @@
                 }
 
                 targetOpacities[i] = opacityTarget;
-                const revealTarget = targetOpacities[i] * revealProgress[i];
                 const current = materials[i].uniforms.uOpacity.value;
                 materials[i].uniforms.uOpacity.value +=
-                    (revealTarget - current) * LERP_SPEED;
+                    (opacityTarget - current) * LERP_SPEED;
             }
 
             if (
@@ -610,16 +567,6 @@
                 "webglcontextrestored",
                 onContextRestored,
             );
-            if (preloaderExitHandler) {
-                window.removeEventListener(
-                    "preloader:exit",
-                    preloaderExitHandler,
-                );
-                preloaderExitHandler = null;
-            }
-            if (revealTween && typeof revealTween.kill === "function") {
-                revealTween.kill();
-            }
 
             stripGroup.clear();
             scene.clear();

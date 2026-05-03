@@ -383,6 +383,9 @@
         display: block;
         width: 100%;
         height: 100%;
+        padding-top: 64px;
+        padding-bottom: 64px;
+        box-sizing: border-box;
     }
 
     .helix-wrapper {

@@ -56,4 +56,18 @@ return [
     "thumbs" => [
         "driver" => $thumbsDriver,
     ],
+    "hooks" => [
+        // Force a fresh mtime on every file write so Kirby's media hash
+        // (sha256 of secret + mtime + filename) always changes, busting
+        // any browser-cached `immutable` /media/ URL.
+        "file.replace:after" => function ($newFile) {
+            @touch($newFile->root());
+        },
+        "file.update:after" => function ($newFile) {
+            @touch($newFile->root());
+        },
+        "file.create:after" => function ($file) {
+            @touch($file->root());
+        },
+    ],
 ];

@@ -83,6 +83,7 @@
         display: flex;
         position: relative;
         width: 100%;
+        max-height: 64px;
     }
 
     .footer.abs {
