@@ -26,7 +26,7 @@
 </script>
 
 <section class="section ab">
-    <div class="container-xl py-lg">
+    <div class="container-xl py-lg pb-0">
         <div class="l-inner">
             <div class="col-img">
                 {#if images.length}
@@ -61,7 +61,7 @@
     }
 
     .ab {
-        min-height: 100vh;
+        min-height: calc(100vh - 64px);
     }
 
     .l-inner {

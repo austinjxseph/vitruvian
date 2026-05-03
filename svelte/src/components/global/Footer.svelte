@@ -100,8 +100,10 @@
 
     .vignette {
         position: absolute;
-        inset: 0;
-        min-height: 10vh;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 10vh;
         background: linear-gradient(
             to top,
             var(--_themes---site--bg--bg-primary) 0%,
