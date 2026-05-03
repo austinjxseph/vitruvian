@@ -191,15 +191,17 @@
                             </div>
                         {/if}
                         <div class="heading">
-                            <div class="eyebrow">
-                                <div
-                                    class={`marker is-${normalizedAvailabilityStatus}`}
-                                ></div>
-                                <div class="eyebrow-text">{eyebrow}</div>
+                            <div class="heading-text">
+                                <div class="eyebrow">
+                                    <div
+                                        class={`marker is-${normalizedAvailabilityStatus}`}
+                                    ></div>
+                                    <div class="eyebrow-text">{eyebrow}</div>
+                                </div>
+                                <h1>
+                                    {@html title}
+                                </h1>
                             </div>
-                            <h1>
-                                {@html title}
-                            </h1>
                             <c-button
                                 label={buttonlabel}
                                 href={buttonhref}
@@ -486,6 +488,14 @@
         align-self: start;
         max-width: 40rem;
         justify-content: flex-start;
+    }
+
+    /* Eyebrow + h1 group — tighter internal spacing */
+    .heading-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--gap--sm);
     }
 
     /* H1 styling */
