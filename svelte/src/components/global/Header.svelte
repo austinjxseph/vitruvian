@@ -97,7 +97,7 @@
     }
 
     .navbar {
-        z-index: 3;
+        z-index: 15;
         padding: 1rem var(--global--margin);
         color: var(--_themes---site--text--text-primary);
         font-size: var(--h4--font-size);
@@ -154,7 +154,7 @@
     }
 
     .overlay {
-        z-index: 3;
+        z-index: 15;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -181,7 +181,7 @@
         top: 0;
         right: 0;
         bottom: 0;
-        z-index: 4;
+        z-index: 16;
         display: flex;
         flex-direction: column;
         gap: var(--gap--xxl);
@@ -246,7 +246,7 @@
         align-items: flex-end;
         display: flex;
         position: relative;
-        z-index: 1;
+        z-index: 16;
     }
 
     .menu {
@@ -265,7 +265,7 @@
     }
 
     [data-nav-element="menu"] {
-        z-index: 9;
+        z-index: 16;
     }
 
     [data-nav-state="closed"] .drawer {
