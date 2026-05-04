@@ -10,20 +10,6 @@
     } = $props();
 
     let navState = $state("closed");
-    let time = $state("");
-
-    function updateTime() {
-        const now = new Date();
-        time = now
-            .toLocaleTimeString("en-GB", {
-                timeZone: "Europe/London",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: true,
-            })
-            .toUpperCase();
-    }
 
     function closeNavigation() {
         navState = "closed";
@@ -46,12 +32,6 @@
         return () =>
             window.removeEventListener("navigation:exit", closeNavigation);
     });
-
-    $effect(() => {
-        updateTime();
-        const interval = setInterval(updateTime, 1000);
-        return () => clearInterval(interval);
-    });
 </script>
 
 <header data-nav-state={navState} data-nav-element="navbar" class="navbar">
@@ -67,11 +47,6 @@
         <a href={rootpath} aria-label="Go Back Home" class="logo">
             Austin Joseph
         </a>
-
-        <div class="location">
-            <span class="location-label">London, England</span>
-            <span class="location-time">[{time}]</span>
-        </div>
 
         <ul role="list" class="drawer">
             <button
@@ -142,7 +117,7 @@
         grid-row-gap: 16px;
         flex: 1;
         grid-template-rows: auto;
-        grid-template-columns: 1fr auto 1fr;
+        grid-template-columns: 1fr 1fr;
         grid-auto-columns: 1fr;
         justify-content: space-between;
         align-self: stretch;
@@ -151,34 +126,6 @@
         margin-left: auto;
         margin-right: auto;
         display: grid;
-    }
-
-    .location {
-        display: flex;
-        flex-flow: row;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-
-    .location-label {
-        font-family: var(--typeface--primary);
-        font-size: var(--paragraph--font-size-s);
-        line-height: var(--paragraph--line-height-s);
-        color: var(--_themes---site--text--text-primary);
-    }
-
-    .location-time {
-        font-family: var(--typeface--primary);
-        font-size: var(--paragraph--font-size-s);
-        line-height: var(--paragraph--line-height-s);
-        color: var(--_themes---site--text--text-secondary);
-    }
-
-    @media screen and (max-width: 991px) {
-        .location {
-            display: none;
-        }
     }
 
     .link {

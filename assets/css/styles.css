@@ -451,6 +451,11 @@ c-footer {
     line-height: var(--paragraph--line-height-l);
 }
 
+.u-text-info {
+    font-size: 14px;
+    line-height: 1em;
+}
+
 .u-bg-white {
     background-color: var(--_themes---neutrals--white);
     color: var(--_themes---neutrals--950);

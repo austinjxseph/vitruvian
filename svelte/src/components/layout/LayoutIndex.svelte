@@ -102,10 +102,12 @@
                 <div class="track" bind:this={trackEl}>
                     {#if projects.length}
                         <div class="info" aria-hidden="true">
-                            <span class="u-text-secondary"
+                            <span class="u-text-secondary u-text-info"
                                 >{projects[activeIndex]?.name}</span
                             >
-                            <span>{projects[activeIndex]?.title}</span>
+                            <span class="u-text-info"
+                                >{projects[activeIndex]?.title}</span
+                            >
                         </div>
                     {/if}
                     <c-strip id={stripId}></c-strip>
@@ -165,14 +167,14 @@
         display: flex;
         flex: 1;
         align-self: stretch;
+        gap: var(--gap--xxl);
         height: 100dvh;
         overflow: hidden;
     }
 
     @media screen and (max-width: 991px) {
         .inner {
-            grid-column-gap: 0px;
-            grid-row-gap: 0px;
+            gap: 0;
             flex-flow: column;
             max-height: none;
         }
@@ -200,7 +202,6 @@
         flex-direction: column;
         justify-content: flex-end;
         align-items: flex-start;
-        padding-right: var(--global--margin);
         padding-left: var(--global--margin);
         padding-top: var(--_units---abs--32);
         padding-bottom: var(--_units---abs--24);
@@ -224,7 +225,8 @@
         display: flex;
         flex: 1;
         align-self: stretch;
-        max-width: calc(100dvh - 2 * var(--padding--lg));
+        justify-content: center;
+        align-items: center;
         padding-right: 24px;
         position: relative;
         height: 100dvh;
@@ -236,12 +238,15 @@
         position: absolute;
         bottom: var(--_units---abs--24);
         left: 0;
-        right: 24px;
+        right: 0;
+        padding-left: var(--global--margin);
+        padding-right: var(--global--margin);
         z-index: 3;
         pointer-events: none;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: flex-end;
+        text-align: right;
         gap: var(--gap--xxs);
         font-size: var(--h4--font-size, 1.25rem);
         font-weight: 400;
@@ -258,6 +263,9 @@
     .track :global(c-strip) {
         position: relative;
         z-index: 1;
+        width: 100%;
+        height: 100%;
+        max-width: calc(100dvh - 2 * var(--padding--lg));
     }
 
     .track::after {

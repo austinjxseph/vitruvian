@@ -128,7 +128,7 @@
 
         .l-inner {
             grid-template-columns: 1fr;
-            gap: var(--gap--xxl);
+            gap: 0;
         }
 
         .col-img {
