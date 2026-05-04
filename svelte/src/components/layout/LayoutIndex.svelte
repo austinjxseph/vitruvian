@@ -230,7 +230,6 @@
         padding-right: 24px;
         position: relative;
         height: 100dvh;
-        isolation: isolate;
     }
 
     /* Bottom-aligned label inside the canvas wrapper */
@@ -241,7 +240,7 @@
         right: 0;
         padding-left: var(--global--margin);
         padding-right: var(--global--margin);
-        z-index: 3;
+        z-index: 12;
         pointer-events: none;
         display: flex;
         flex-direction: column;
