@@ -246,7 +246,7 @@
         flex-direction: column;
         align-items: flex-end;
         text-align: right;
-        gap: var(--gap--xxs);
+        gap: var(--gap--xs);
         font-size: var(--h4--font-size, 1.25rem);
         font-weight: 400;
         line-height: var(--h4--line-height, 1.4);
