@@ -395,6 +395,12 @@
         }
     }
 
+    @media screen and (min-width: 1729px) {
+        :global(c-helix) {
+            aspect-ratio: 1 / 1;
+        }
+    }
+
     .helix-wrapper {
         width: 100%;
         height: 100%;

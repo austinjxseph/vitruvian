@@ -36,8 +36,6 @@
                 {/if}
             </div>
 
-            <div class="col-spacer" aria-hidden="true"></div>
-
             <div class="col-body">
                 {#each items as item}
                     {@const blockId = `ab-${item.id}`}
@@ -82,12 +80,6 @@
         overflow: clip;
     }
 
-    .col-spacer {
-        display: none;
-        min-height: 1px;
-        min-width: 1px;
-    }
-
     .col-body :global(.text-md p strong) {
         color: var(--_themes---site--text--text-secondary);
     }
@@ -101,19 +93,13 @@
     }
 
     @media screen and (min-width: 1729px) {
-        .col-body {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: var(--gap--md);
-            align-content: start;
+        .l-inner {
+            grid-template-columns: repeat(3, 1fr);
         }
 
-        .col-body :global(b-margin-text) {
+        .col-img {
             grid-column: span 2;
-        }
-
-        .col-body :global(b-margin-header) {
-            grid-column: span 2;
+            max-width: 40vw;
         }
     }
 

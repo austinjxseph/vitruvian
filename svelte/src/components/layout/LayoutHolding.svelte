@@ -75,7 +75,7 @@
     }
 
     .title h1 {
-        font-family: var(--typeface--secondary);
+        font-family: var(--typeface--tertiary);
         font-size: 2.5rem;
         line-height: var(--h1--line-height);
         letter-spacing: var(--h1--letter-spacing);

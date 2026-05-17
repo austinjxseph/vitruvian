@@ -38,7 +38,7 @@
         flex-direction: column;
         gap: var(--padding--sm);
         align-self: stretch;
-        padding: 0 var(--global--margin) var(--padding--md);
+        padding: var(--padding--md) var(--global--margin);
     }
 
     h2 {

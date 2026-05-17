@@ -7,9 +7,24 @@
         layout: string;
     };
 
+    type MarginHeaderItem = {
+        id: string;
+        type: "b-margin-header";
+        title: string;
+        description: string;
+        layout: string;
+    };
+
     type TextItem = {
         id: string;
         type: "b-text";
+        columns: string;
+        items: Array<{ heading?: string; content: string }>;
+    };
+
+    type MarginTextItem = {
+        id: string;
+        type: "b-margin-text";
         columns: string;
         items: Array<{ heading?: string; content: string }>;
     };
@@ -28,7 +43,13 @@
         items: Array<{ heading?: string; description: string }>;
     };
 
-    type TextLayoutItem = HeaderItem | TextItem | ImageItem | GridItem;
+    type TextLayoutItem =
+        | HeaderItem
+        | MarginHeaderItem
+        | TextItem
+        | MarginTextItem
+        | ImageItem
+        | GridItem;
 
     let { items = [] }: { items?: TextLayoutItem[] } = $props();
 </script>
@@ -44,8 +65,14 @@
                     {#if item.type === "b-header"}
                         <b-header id={blockId}></b-header>
                         {@html `<script type="application/json" data-for="${blockId}">${JSON.stringify({ title: item.title, description: item.description, layout: item.layout })}<\/script>`}
+                    {:else if item.type === "b-margin-header"}
+                        <b-margin-header id={blockId}></b-margin-header>
+                        {@html `<script type="application/json" data-for="${blockId}">${JSON.stringify({ title: item.title, description: item.description, layout: item.layout })}<\/script>`}
                     {:else if item.type === "b-text"}
                         <b-text id={blockId}></b-text>
+                        {@html `<script type="application/json" data-for="${blockId}">${JSON.stringify({ columns: item.columns, items: item.items })}<\/script>`}
+                    {:else if item.type === "b-margin-text"}
+                        <b-margin-text id={blockId}></b-margin-text>
                         {@html `<script type="application/json" data-for="${blockId}">${JSON.stringify({ columns: item.columns, items: item.items })}<\/script>`}
                     {:else if item.type === "b-img"}
                         <b-img id={blockId}></b-img>

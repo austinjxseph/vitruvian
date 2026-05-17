@@ -12,6 +12,14 @@ foreach ($page->blocks()->toBlocks() as $block) {
             "description" => (string) $block->description()->kt(),
             "layout" => $block->layout()->value() ?: "column",
         ];
+    } elseif ($block->type() === "b-margin-header") {
+        $itemsData[] = [
+            "id" => $block->id(),
+            "type" => "b-margin-header",
+            "title" => (string) $block->title()->kt(),
+            "description" => (string) $block->description()->kt(),
+            "layout" => $block->layout()->value() ?: "column",
+        ];
     } elseif ($block->type() === "b-text") {
         $textItems = [];
         foreach ($block->items()->toStructure() as $item) {
@@ -24,6 +32,21 @@ foreach ($page->blocks()->toBlocks() as $block) {
         $itemsData[] = [
             "id" => $block->id(),
             "type" => "b-text",
+            "columns" => $block->columns()->value() ?: "4",
+            "items" => $textItems,
+        ];
+    } elseif ($block->type() === "b-margin-text") {
+        $textItems = [];
+        foreach ($block->items()->toStructure() as $item) {
+            $itemData = $item->toArray();
+            $textItems[] = [
+                "heading" => $itemData["heading"] ?? "",
+                "content" => $itemData["content"] ?? "",
+            ];
+        }
+        $itemsData[] = [
+            "id" => $block->id(),
+            "type" => "b-margin-text",
             "columns" => $block->columns()->value() ?: "4",
             "items" => $textItems,
         ];

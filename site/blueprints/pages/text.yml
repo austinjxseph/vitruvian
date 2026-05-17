@@ -11,7 +11,9 @@ columns:
             label: Content
             fieldsets:
               - b-header
+              - b-margin-header
               - b-text
+              - b-margin-text
               - b-img
               - b-grid
 
