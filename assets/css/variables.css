@@ -32,7 +32,7 @@
 
 :root {
     --typeface--primary: "Inter Display", Arial, sans-serif;
-    --typeface--secondary: "EB Garamond", Georgia, serif;
+    --typeface--secondary: "EB Garamond Italic", Georgia, serif;
     --typeface--tertiary: "EB Garamond Italic", Georgia, serif;
 
     --h1--font-size: var(--_units---abs--7-5);
@@ -231,7 +231,7 @@ body {
 @media screen and (max-width: 479px) {
     body {
         --typeface--primary: "Inter Display", Arial, sans-serif;
-        --typeface--secondary: "EB Garamond", Georgia, serif;
+        --typeface--secondary: "EB Garamond Italic", Georgia, serif;
         --typeface--tertiary: "EB Garamond Italic", Georgia, serif;
 
         --h1--font-size: var(--_units---abs--6);

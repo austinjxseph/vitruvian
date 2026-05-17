@@ -30,6 +30,10 @@ link_persistent_dir "$PERSIST_ROOT/content" "$APP_ROOT/content"
 mkdir -p "$APP_ROOT/site"
 link_persistent_dir "$PERSIST_ROOT/site/accounts" "$APP_ROOT/site/accounts"
 
+# Match the symlink owner to www-data so the kernel's fs.protected_symlinks
+# guard lets Apache follow them (APP_ROOT has the sticky bit set).
+chown -h www-data:www-data "$APP_ROOT/content" "$APP_ROOT/site/accounts"
+
 mkdir -p "$APP_ROOT/media"
 chown -R www-data:www-data "$PERSIST_ROOT" "$APP_ROOT/media"
 
