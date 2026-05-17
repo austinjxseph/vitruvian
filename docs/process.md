@@ -1,5 +1,16 @@
 # Process Log
 
+## About Image Border And Header Width (2026-05-17)
+
+### What was done
+Removed the about image column border overlay and constrained the about margin header title to the same two-column content width as its body text.
+
+### What the problem was
+The image column no longer needed the pseudo-element border. The margin header title was also rendered in a full-width block above the three-column detail row, so SplitText was calculating lines against a wider text box than the paragraph content below.
+
+### What fixed it
+Removed `.col-img::after` from `LayoutAbout.svelte`, then changed `BlockMarginHeader.svelte` so `.heading` uses the same three-column grid as `.detail` and the `h2` spans the first two columns on desktop. Non-desktop keeps a single-column heading. Rebuilt the Svelte bundle.
+
 ## Helix Mobile Padding Removal (2026-05-17)
 
 ### What was done

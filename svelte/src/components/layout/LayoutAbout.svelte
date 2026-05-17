@@ -79,18 +79,7 @@
         top: var(--padding--lg, 2rem);
         height: fit-content;
         aspect-ratio: 1;
-        border-radius: 2px;
         overflow: clip;
-    }
-
-    .col-img::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        z-index: 4;
-        pointer-events: none;
-        border: 1px solid rgb(255 255 255 / 12%);
-        border-radius: inherit;
     }
 
     .col-spacer {

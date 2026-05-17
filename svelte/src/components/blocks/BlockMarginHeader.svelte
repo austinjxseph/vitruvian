@@ -51,6 +51,16 @@
         margin: 0;
     }
 
+    .heading {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: var(--gap--md);
+    }
+
+    .heading h2 {
+        grid-column: span 2;
+    }
+
     h2 :global(em) {
         font-family: var(--typeface--secondary);
         font-style: normal;
@@ -102,6 +112,14 @@
     @media screen and (max-width: 991px) {
         .header {
             gap: var(--gap--xxl);
+        }
+
+        .heading {
+            grid-template-columns: 1fr;
+        }
+
+        .heading h2 {
+            grid-column: 1;
         }
 
         .detail {
