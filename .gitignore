@@ -4,6 +4,10 @@
 # Kirby media cache
 /media/
 
+# Kirby production content lives on the Railway volume
+/content/
+/site/accounts/
+
 # Environment
 .env
 
@@ -17,6 +21,9 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Local deployment backups
+/backups/
 
 # Claude Code per-machine settings
 .claude/settings.local.json

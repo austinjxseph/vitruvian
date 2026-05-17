@@ -1,0 +1,8 @@
+.git
+.DS_Store
+.env
+backups/
+media/
+threads/
+vendor/
+svelte/node_modules/

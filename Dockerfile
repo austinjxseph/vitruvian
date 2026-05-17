@@ -44,6 +44,12 @@ RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/Allo
 # Copy Kirby files
 COPY . /var/www/html/
 
+# Keep optional first-boot seed copies for the Railway volume bootstrap.
+RUN mkdir -p /var/www/html/content-seed /var/www/html/site-accounts-seed \
+    && if [ -d /var/www/html/content ]; then cp -a /var/www/html/content/. /var/www/html/content-seed/; fi \
+    && if [ -d /var/www/html/site/accounts ]; then cp -a /var/www/html/site/accounts/. /var/www/html/site-accounts-seed/; fi \
+    && chmod +x /var/www/html/bin/railway-start.sh
+
 # Install PHP dependencies
 RUN cd /var/www/html && composer install --no-dev --optimize-autoloader --no-interaction
 
@@ -54,4 +60,4 @@ RUN mkdir -p /var/www/html/media
 RUN chown -R www-data:www-data /var/www/html
 
 # Fix MPM conflict + set Railway $PORT at runtime, then start Apache
-CMD ["bash", "-lc", "set -eux; a2dismod mpm_event mpm_worker || true; rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.* || true; a2enmod mpm_prefork; sed -i \"s/Listen 80/Listen ${PORT:-80}/g\" /etc/apache2/ports.conf; sed -i \"s/*:80/*:${PORT:-80}/g\" /etc/apache2/sites-available/000-default.conf; apache2ctl -t; exec apache2-foreground"]
+CMD ["/var/www/html/bin/railway-start.sh"]
