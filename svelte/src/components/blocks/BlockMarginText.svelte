@@ -87,6 +87,7 @@
         .item {
             grid-template-columns: 1fr;
             row-gap: var(--gap--sm);
+            padding-top: var(--_units---abs--3);
         }
 
         .content,

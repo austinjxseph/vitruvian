@@ -388,6 +388,13 @@
         box-sizing: border-box;
     }
 
+    @media screen and (max-width: 991px) {
+        :global(c-helix) {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+
     .helix-wrapper {
         width: 100%;
         height: 100%;

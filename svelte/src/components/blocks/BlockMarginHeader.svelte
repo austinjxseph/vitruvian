@@ -49,7 +49,6 @@
         color: var(--_themes---site--text--text-primary);
         font-weight: 400;
         margin: 0;
-        text-wrap: balance;
     }
 
     h2 :global(em) {
@@ -101,9 +100,14 @@
     }
 
     @media screen and (max-width: 991px) {
+        .header {
+            gap: var(--gap--xxl);
+        }
+
         .detail {
             grid-template-columns: 1fr;
             row-gap: var(--gap--sm);
+            padding-top: var(--_units---abs--3);
         }
 
         .text,

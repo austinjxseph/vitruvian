@@ -1,5 +1,38 @@
 # Process Log
 
+## Helix Mobile Padding Removal (2026-05-17)
+
+### What was done
+Removed the helix component's 64px top and bottom host padding on non-desktop viewports.
+
+### What the problem was
+The about image helix kept its desktop vertical inset on tablet/mobile, which created extra empty space inside the bordered image area.
+
+### What fixed it
+Added a `max-width: 991px` override in `Helix.svelte` that sets `c-helix` top and bottom padding to `0`, then rebuilt the Svelte bundle.
+
+## About Margin Text Mobile Padding (2026-05-17)
+
+### What was done
+Matched the about margin text block's non-desktop bordered-row top padding to the margin header.
+
+### What the problem was
+`BlockMarginHeader.svelte` had the intended 12px mobile/tablet top-padding override, but `BlockMarginText.svelte` still kept the desktop 24px top padding on each bordered item row.
+
+### What fixed it
+Added `padding-top: var(--_units---abs--3)` to the `BlockMarginText.svelte` non-desktop `.item` rule and rebuilt the Svelte bundle.
+
+## About Margin Header Mobile Spacing (2026-05-17)
+
+### What was done
+Removed balanced wrapping from the about margin header title and adjusted the non-desktop spacing around its detail row.
+
+### What the problem was
+The margin header title still had `text-wrap: balance`, and the mobile/tablet header needed more separation between the heading and the text/label detail row while using a tighter 12px top padding after the border.
+
+### What fixed it
+Updated `BlockMarginHeader.svelte` to remove `text-wrap: balance`, set the non-desktop header gap to `var(--gap--xxl)`, and override the detail row top padding to `var(--_units---abs--3)`. Rebuilt the Svelte bundle so the generated CSS matches.
+
 ## About Mobile Header And Image Inset (2026-05-17)
 
 ### What was done
