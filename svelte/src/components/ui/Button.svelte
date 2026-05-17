@@ -1,5 +1,10 @@
 <script lang="ts">
-    let { href = "#", label = "Button", active = false } = $props();
+    let {
+        href = "#",
+        label = "Button",
+        arialabel = "",
+        active = false,
+    } = $props();
 </script>
 
 <div class="button {active ? 'button-active' : ''}">
@@ -12,7 +17,7 @@
     <div class="orb">
         <div class="border"></div>
     </div>
-    <a {href} class="wrapper">
+    <a {href} aria-label={arialabel || undefined} class="wrapper">
         <div class="label">
             {label}
         </div>

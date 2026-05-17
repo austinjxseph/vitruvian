@@ -41,11 +41,43 @@ $indexProps = [
     "buttonhref" => $page->hero_button_link()->toUrl(),
     "projects" => $projectsData,
 ];
+
+$heroTitle = strip_tags(
+    (string) $page->hero_title()->kti(),
+    "<em><i><span><strong><b><br>",
+);
 ?>
 
 <div class="page" data-barba="container" data-barba-namespace="Index">
 <main class="main">
-<l-index id="<?= $indexId ?>"></l-index>
+<l-index id="<?= $indexId ?>">
+  <main class="home-fallback">
+    <section class="home-fallback__section">
+      <div class="home-fallback__container">
+        <div class="home-fallback__text">
+          <div class="home-fallback__heading">
+            <div class="home-fallback__eyebrow">
+              <div class="home-fallback__marker is-<?= $availabilityStatus ?>"></div>
+              <div class="home-fallback__eyebrow-text"><?= $page
+                  ->hero_eyebrow()
+                  ->html() ?></div>
+            </div>
+            <h1><?= $heroTitle ?></h1>
+          </div>
+          <?php if ($page->hero_button_label()->isNotEmpty()): ?>
+          <a
+            class="home-fallback__button"
+            href="<?= $page->hero_button_link()->toUrl() ?>"
+            aria-label="Read more about me"
+          >
+            <?= $page->hero_button_label()->html() ?>
+          </a>
+          <?php endif; ?>
+        </div>
+      </div>
+    </section>
+  </main>
+</l-index>
 <script type="application/json" data-for="<?= $indexId ?>">
 <?= json_encode($indexProps, JSON_UNESCAPED_SLASHES) ?>
 </script>

@@ -12,8 +12,8 @@ columns:
         type: blocks
         label: Body
         fieldsets:
-          - b-header
-          - b-text
+          - b-margin-header
+          - b-margin-text
 
   - width: 1/3
     sticky: true

@@ -39,6 +39,7 @@ AddType application/json .json
 AddType application/javascript .js
 AddType text/css .css
 AddType image/webp .webp
+AddType font/ttf .ttf
 AddType font/woff2 .woff2
 AddType font/woff .woff
 </IfModule>
@@ -56,14 +57,16 @@ ExpiresByType image/svg+xml "access plus 1 year"
 ExpiresByType image/x-icon "access plus 1 year"
 
 # Fonts: cache 1 year
+ExpiresByType font/ttf "access plus 1 year"
 ExpiresByType font/woff2 "access plus 1 year"
 ExpiresByType font/woff "access plus 1 year"
+ExpiresByType application/x-font-ttf "access plus 1 year"
 ExpiresByType application/font-woff2 "access plus 1 year"
 
-# CSS/JS: cache 1 week (rebuilt on deploy)
-ExpiresByType text/css "access plus 1 week"
-ExpiresByType application/javascript "access plus 1 week"
-ExpiresByType text/javascript "access plus 1 week"
+# CSS/JS: cache 1 year (versioned by file mtime)
+ExpiresByType text/css "access plus 1 year"
+ExpiresByType application/javascript "access plus 1 year"
+ExpiresByType text/javascript "access plus 1 year"
 
 # HTML: no cache (always fresh from Kirby)
 ExpiresByType text/html "access plus 0 seconds"
@@ -83,11 +86,11 @@ ExpiresByType text/html "access plus 0 seconds"
         Header set Cache-Control "public, max-age=86400, must-revalidate"
     </FilesMatch>
 </Else>
-# Fonts rarely change and are typically referenced by stable filenames.
-<FilesMatch "\.(woff2|woff)$">
-    Header set Cache-Control "public, max-age=31536000"
+# Fonts rarely change and are preloaded with versioned URLs.
+<FilesMatch "\.(ttf|woff2|woff)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
 </FilesMatch>
 <FilesMatch "\.(css|js)$">
-    Header set Cache-Control "public, max-age=604800"
+    Header set Cache-Control "public, max-age=31536000, immutable"
 </FilesMatch>
 </IfModule>

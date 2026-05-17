@@ -11697,31 +11697,7 @@ Status: Completed
 ```
 @font-face {
     font-family: "Inter Display";
-    src: url("/assets/fonts/InterDisplay-Regular.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: block;
-}
-
-@font-face {
-    font-family: "Inter Display";
-    src: url("/assets/fonts/InterDisplay-Medium.ttf") format("truetype");
-    font-weight: 500;
-    font-style: normal;
-    font-display: block;
-}
-
-@font-face {
-    font-family: "Inter Display";
-    src: url("/assets/fonts/InterDisplay-Bold.ttf") format("truetype");
-    font-weight: 700;
-    font-style: normal;
-    font-display: block;
-}
-
-@font-face {
-    font-family: "EB Garamond";
-    src: url("/assets/fonts/EBGaramond-Regular.ttf") format("truetype");
+    src: url("/assets/fonts/InterDisplay-Regular.woff2") format("woff2");
     font-weight: 400;
     font-style: normal;
     font-display: block;
@@ -11729,7 +11705,7 @@ Status: Completed
 
 @font-face {
     font-family: "EB Garamond";
-    src: url("/assets/fonts/EBGaramond-Italic.ttf") format("truetype");
+    src: url("/assets/fonts/EBGaramond-Italic.woff2") format("woff2");
     font-weight: 400;
     font-style: italic;
     font-display: block;
@@ -11737,7 +11713,7 @@ Status: Completed
 
 @font-face {
     font-family: "EB Garamond Italic";
-    src: url("/assets/fonts/EBGaramond-Italic.ttf") format("truetype");
+    src: url("/assets/fonts/EBGaramond-Italic.woff2") format("woff2");
     font-weight: 400;
     font-style: normal;
     font-display: block;

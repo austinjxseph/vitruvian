@@ -1,7 +1,7 @@
 <script lang="ts">
     type HeaderItem = {
         id: string;
-        type: "b-header";
+        type: "b-margin-header";
         title: string;
         description: string;
         layout: string;
@@ -9,7 +9,7 @@
 
     type TextItem = {
         id: string;
-        type: "b-text";
+        type: "b-margin-text";
         columns: string;
         items: Array<{ heading?: string; content: string }>;
     };
@@ -41,11 +41,11 @@
             <div class="col-body">
                 {#each items as item}
                     {@const blockId = `ab-${item.id}`}
-                    {#if item.type === "b-header"}
-                        <b-header id={blockId}></b-header>
+                    {#if item.type === "b-margin-header"}
+                        <b-margin-header id={blockId}></b-margin-header>
                         {@html `<script type="application/json" data-for="${blockId}">${JSON.stringify({ title: item.title, description: item.description, layout: item.layout })}<\/script>`}
-                    {:else if item.type === "b-text"}
-                        <b-text id={blockId}></b-text>
+                    {:else if item.type === "b-margin-text"}
+                        <b-margin-text id={blockId}></b-margin-text>
                         {@html `<script type="application/json" data-for="${blockId}">${JSON.stringify({ columns: item.columns, items: item.items })}<\/script>`}
                     {/if}
                 {/each}
@@ -79,6 +79,18 @@
         top: var(--padding--lg, 2rem);
         height: fit-content;
         aspect-ratio: 1;
+        border-radius: 2px;
+        overflow: clip;
+    }
+
+    .col-img::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        pointer-events: none;
+        border: 1px solid rgb(255 255 255 / 12%);
+        border-radius: inherit;
     }
 
     .col-spacer {
@@ -89,10 +101,6 @@
 
     .col-body :global(.text-md p strong) {
         color: var(--_themes---site--text--text-secondary);
-    }
-
-    .col-body :global(b-header) {
-        text-align: justify;
     }
 
     .col-body {
@@ -111,12 +119,12 @@
             align-content: start;
         }
 
-        .col-body :global(b-text) {
+        .col-body :global(b-margin-text) {
             grid-column: span 2;
         }
 
-        .col-body :global(b-header) {
-            grid-column: span 1;
+        .col-body :global(b-margin-header) {
+            grid-column: span 2;
         }
     }
 
@@ -128,13 +136,15 @@
 
         .l-inner {
             grid-template-columns: 1fr;
-            gap: 0;
         }
 
         .col-img {
             position: relative;
             top: auto;
             aspect-ratio: 4 / 3;
+            width: calc(100% - (var(--global--margin) * 2));
+            margin-left: var(--global--margin);
+            margin-right: var(--global--margin);
         }
 
         .col-body :global(text-md) {

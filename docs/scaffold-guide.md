@@ -132,11 +132,8 @@ Browser
 │   │   ├── script.js             # Optional: vanilla JS for any custom behaviour
 │   │   └── components.js         # BUILT by Vite — all Svelte components as IIFE
 │   └── fonts/
-│       ├── InterDisplay-Regular.ttf
-│       ├── InterDisplay-Medium.ttf
-│       ├── InterDisplay-Bold.ttf
-│       ├── EBGaramond-Regular.ttf
-│       └── EBGaramond-Italic.ttf
+│       ├── InterDisplay-Regular.woff2
+│       └── EBGaramond-Italic.woff2
 │
 └── svelte/                       # Svelte source (not served directly)
     ├── package.json

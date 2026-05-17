@@ -1,5 +1,49 @@
 # Process Log
 
+## About Mobile Header And Image Inset (2026-05-17)
+
+### What was done
+Removed the about page's forced justified alignment from margin header blocks and inset the mobile image column with the global page margin token.
+
+### What the problem was
+The about header's short italic lines were inheriting `text-align: justify`, which stretched spaces between words on mobile. The image wrapper also ran edge-to-edge on non-desktop, so its pseudo-element border did not align with the global content margin.
+
+### What fixed it
+Updated `svelte/src/components/layout/LayoutAbout.svelte` to let `b-margin-header` use its own text alignment, then set `.col-img` on `max-width: 991px` to `width: calc(100% - (var(--global--margin) * 2))` with matching left and right global margins. Rebuilt the Svelte bundle so `assets/css/svelte.css` reflects the change.
+
+## Home LCP Fallback Shell (2026-05-17)
+
+### What was done
+Added a server-rendered fallback hero inside the homepage `l-index` custom element so the browser can paint the H1 before the Svelte bundle registers and hydrates the enhanced home layout.
+
+### What the problem was
+The homepage H1 was rendered only by `LayoutIndex.svelte`, which made the LCP text depend on `components.js` loading and custom-element mounting even though the content is available in Kirby at initial request time.
+
+### What fixed it
+Updated `site/templates/home.php` to render a temporary light-DOM fallback with the hero eyebrow, H1, and CTA inside `<l-index>`, then added `l-index:not(:defined)` fallback styles in `assets/css/styles.css`. The existing Svelte custom-element wrapper clears that light DOM on mount, so the fallback only exists pre-hydration.
+
+## Home Button Accessible Label (2026-05-17)
+
+### What was done
+Added an optional accessible-label prop to the shared Svelte button component and passed `Read more about me` from the home page CTA.
+
+### What the problem was
+The home CTA needed a clearer accessible name without forcing that same label onto other shared button usages such as holding and 404 pages.
+
+### What fixed it
+Updated `c-button` to accept an `arialabel` prop and render it as `aria-label` on the internal anchor when provided, registered the prop in `svelte/src/main.ts`, and set `arialabel="Read more about me"` on the home layout button.
+
+## Lighthouse Asset Loading And Cache Cleanup (2026-05-17)
+
+### What was done
+Updated the global asset loading path to address the AOGES Lighthouse findings without changing the chosen CDN strategy or typography behavior.
+
+### What the problem was
+The audit flagged render-blocking scripts, short-lived cache headers, font-display behavior, and empty CSS requests. The external motion libraries are intentionally still loaded from unpkg, and `font-display: block` remains in place to avoid an unacceptable Arial/Georgia flash before Inter/Garamond loads.
+
+### What fixed it
+Added `defer` to the existing CDN and local scripts, removed the empty `keyframes.css` link from the document head, moved the two critical WOFF2 font files into `assets/fonts`, updated the active `@font-face` declarations and preloads to use those WOFF2 files, and extended Apache cache headers so `.ttf`, `.woff`, `.woff2`, `.css`, and `.js` assets use long immutable caching. The existing `versionedAsset()` helper continues to append file mtimes so fresh Railway builds produce fresh asset URLs.
+
 ## Home Strip Shared Active-Line Centering (2026-04-06)
 
 ### What was done
@@ -219,6 +263,61 @@ The latest tweak changed when cards became active, but the actual request was ab
 
 ### What fixed it
 Set `ACTIVE_SWITCH_HYSTERESIS` back to its previous value and increased `LERP_SPEED` in `svelte/src/components/ui/Strip.svelte`, which makes the opacity transition react more quickly without changing the active-card threshold.
+
+## About Margin Blocks (2026-05-17)
+
+### What was done
+Added about-specific `b-margin-header` and `b-margin-text` block models, matching Svelte web components, Kirby snippets, and about template routing.
+
+### What the problem was
+The about page needed a separate pair of block types for a new right-margin design while keeping the existing data fields and rendering contract intact.
+
+### What fixed it
+Added new Kirby block blueprints/snippets, registered `b-margin-header` and `b-margin-text` in Svelte, changed the about blueprint fieldsets to those new blocks, and normalized old `b-header`/`b-text` content in `site/templates/about.php` so existing content renders through the new components.
+
+## About Margin Block Design (2026-05-17)
+
+### What was done
+Updated the new margin header and margin text Svelte components to match the right-margin label layout from the supplied design.
+
+### What the problem was
+The margin block models existed but still mirrored the old header and text block layout instead of using a three-column content-and-label composition.
+
+### What fixed it
+Changed `BlockMarginHeader.svelte` and `BlockMarginText.svelte` to use three-column grids with content spanning two columns and a monospace label in the right column, added a 12px top padding and 12% white top border, separated text items with the global 48px gap token, and made the about layout stack the new margin blocks full-width at large breakpoints.
+
+## About Margin Block CMS Migration (2026-05-17)
+
+### What was done
+Migrated the saved about page block content from `b-header`/`b-text` to `b-margin-header`/`b-margin-text`, uppercased the margin labels, reinforced the 48px text-item gap, and added the same 12% white border with a 2px radius around the about image wrapper.
+
+### What the problem was
+The frontend serializer could render old block types, but the Kirby Panel still saw the saved content as old block models, so existing blocks appeared as remnants instead of editable margin blocks.
+
+### What fixed it
+Updated `content/2_about/about.txt` so the stored block types match the new about blueprint fieldsets, then rebuilt the Svelte bundle after tightening `BlockMarginHeader.svelte`, `BlockMarginText.svelte`, and `LayoutAbout.svelte`.
+
+## About Margin Header Row Split (2026-05-17)
+
+### What was done
+Split the margin header into a standalone heading row and a bordered detail row, and moved the about image wrapper border above the helix vignette layers.
+
+### What the problem was
+The header border was applied across the whole block instead of only the description/label row, and the helix vignette descendants could visually cover the image column border.
+
+### What fixed it
+Updated `BlockMarginHeader.svelte` so the heading sits in its own row and the description plus uppercase label sit in a separate three-column row with the top border. Updated `LayoutAbout.svelte` to render the image border through a high z-index `::after` pseudo-element over the helix component.
+
+## About Margin Block Spacing (2026-05-17)
+
+### What was done
+Increased the top padding on bordered margin block rows to 24px and removed the margin header heading width cap.
+
+### What the problem was
+The bordered rows were using the previous 12px top padding, and the margin header title was constrained by a `36rem` max width so it could not span the intended two-column area.
+
+### What fixed it
+Changed the bordered row padding in `BlockMarginHeader.svelte` and `BlockMarginText.svelte` to `var(--_units---abs--6)` and removed the `.heading` max-width rule from the margin header component.
 
 ## Home Availability Status Controls (2026-04-05)
 

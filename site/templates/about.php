@@ -13,15 +13,15 @@ foreach ($page->about_images()->toFiles() as $image) {
 } // Build items array from blocks field — unified with type discrimination
 $itemsData = [];
 foreach ($page->about_items()->toBlocks() as $block) {
-    if ($block->type() === "b-header") {
+    if ($block->type() === "b-margin-header" || $block->type() === "b-header") {
         $itemsData[] = [
             "id" => $block->id(),
-            "type" => "b-header",
+            "type" => "b-margin-header",
             "title" => (string) $block->title()->kt(),
             "description" => (string) $block->description()->kt(),
             "layout" => $block->layout()->value() ?: "column",
         ];
-    } elseif ($block->type() === "b-text") {
+    } elseif ($block->type() === "b-margin-text" || $block->type() === "b-text") {
         $textItems = [];
         foreach ($block->items()->toStructure() as $item) {
             $itemData = $item->toArray();
@@ -32,7 +32,7 @@ foreach ($page->about_items()->toBlocks() as $block) {
         }
         $itemsData[] = [
             "id" => $block->id(),
-            "type" => "b-text",
+            "type" => "b-margin-text",
             "columns" => $block->columns()->value() ?: "4",
             "items" => $textItems,
         ];

@@ -938,10 +938,122 @@ c-indexcard:not(:defined) {
     width: 100%;
 }
 
-l-home:not(:defined) {
+l-index:not(:defined) {
     display: block;
     min-height: 100vh;
     width: 100%;
+}
+
+l-index:not(:defined) .home-fallback {
+    display: block;
+    width: 100%;
+}
+
+l-index:not(:defined) .home-fallback__section {
+    background-color: var(--_themes---site--bg--bg-primary);
+    color: var(--_themes---site--text--text-primary);
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+l-index:not(:defined) .home-fallback__container {
+    display: flex;
+    flex: 1;
+    max-width: var(--max-width--xl);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+l-index:not(:defined) .home-fallback__text {
+    align-items: flex-start;
+    align-self: stretch;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-end;
+    max-width: 40rem;
+    padding: var(--_units---abs--32) var(--global--margin)
+        var(--_units---abs--24);
+    gap: var(--gap--md);
+}
+
+l-index:not(:defined) .home-fallback__heading {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap--sm);
+}
+
+l-index:not(:defined) .home-fallback__eyebrow {
+    align-items: center;
+    color: var(--_themes---site--text--text-secondary);
+    display: flex;
+    gap: 8px;
+}
+
+l-index:not(:defined) .home-fallback__marker {
+    background-color: var(--_themes---site--bg--bg-active);
+    border-radius: 4px;
+    width: 8px;
+    height: 4px;
+}
+
+l-index:not(:defined) .home-fallback__marker.is-hold {
+    background-color: #ff8a00;
+}
+
+l-index:not(:defined) .home-fallback__marker.is-blocked {
+    background-color: #e83452;
+}
+
+l-index:not(:defined) .home-fallback__eyebrow-text {
+    font-size: var(--paragraph--font-size-l);
+    line-height: var(--paragraph--line-height-l);
+}
+
+l-index:not(:defined) .home-fallback h1 {
+    font-family: var(--h1--font-family);
+    font-size: var(--h1--font-size);
+    line-height: var(--h1--line-height);
+    letter-spacing: var(--h1--letter-spacing);
+    font-weight: 400;
+    margin: 0;
+}
+
+l-index:not(:defined) .home-fallback h1 em,
+l-index:not(:defined) .home-fallback h1 i,
+l-index:not(:defined) .home-fallback h1 span {
+    font-size: calc(var(--h1--line-height) * 0.95);
+    font-family: var(--typeface--tertiary);
+    font-style: italic;
+}
+
+l-index:not(:defined) .home-fallback__button {
+    border: 1px solid #fff3;
+    border-radius: 62.5rem;
+    color: var(--_themes---site--text--text-primary);
+    display: inline-block;
+    font-size: 0.88rem;
+    line-height: 1.42;
+    padding: 0.5rem 1.5rem;
+    text-decoration: none;
+}
+
+@media screen and (max-width: 991px) {
+    l-index:not(:defined) .home-fallback__text {
+        justify-content: flex-start;
+        padding-top: 8rem;
+        padding-bottom: 4rem;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    l-index:not(:defined) .home-fallback__eyebrow-text {
+        font-size: var(--paragraph--font-size-m);
+        line-height: var(--paragraph--line-height-m);
+    }
 }
 
 /* Lenis smooth scroll */

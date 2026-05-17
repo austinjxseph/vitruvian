@@ -42,6 +42,10 @@
     <link rel="apple-touch-icon" href="<?= $favicon->url() ?>">
   <?php endif; ?>
 
+  <!-- Preload: critical fonts -->
+  <link rel="preload" as="font" type="font/woff2" href="<?= versionedAsset('/assets/fonts/InterDisplay-Regular.woff2') ?>" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="<?= versionedAsset('/assets/fonts/EBGaramond-Italic.woff2') ?>" crossorigin>
+
   <!-- Preload: preloader images (fetched by Three.js TextureLoader) -->
   <?php foreach ($site->preloader_images()->toFiles() as $img): ?>
   <link rel="preload" as="image" href="<?= $img->url() ?>">
@@ -51,7 +55,6 @@
   <link rel="stylesheet" href="<?= versionedAsset('/assets/css/normalize.css') ?>">
   <link rel="stylesheet" href="<?= versionedAsset('/assets/css/variables.css') ?>">
   <link rel="stylesheet" href="<?= versionedAsset('/assets/css/styles.css') ?>">
-  <link rel="stylesheet" href="<?= versionedAsset('/assets/css/keyframes.css') ?>">
   <link rel="stylesheet" href="<?= versionedAsset('/assets/css/svelte.css') ?>">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="9623ddbb-c725-4d81-adbf-67d495bbf7df"></script>
 </head>

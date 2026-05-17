@@ -93,6 +93,7 @@
                             <c-button
                                 label={buttonlabel}
                                 href={buttonhref}
+                                arialabel="Read more about me"
                                 active
                             ></c-button>
                         </div>

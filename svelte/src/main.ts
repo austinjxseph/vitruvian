@@ -30,8 +30,10 @@ import Strip from "./components/ui/Strip.svelte";
 
 // Block components
 import BlockHeader from "./components/blocks/BlockHeader.svelte";
+import BlockMarginHeader from "./components/blocks/BlockMarginHeader.svelte";
 import BlockImage from "./components/blocks/BlockImage.svelte";
 import BlockText from "./components/blocks/BlockText.svelte";
+import BlockMarginText from "./components/blocks/BlockMarginText.svelte";
 import BlockGrid from "./components/blocks/BlockGrid.svelte";
 import BlockFullBleed from "./components/blocks/BlockFullBleed.svelte";
 
@@ -51,7 +53,12 @@ registerSvelteElement("l-index", LayoutIndex, [
 ]);
 
 // Register UI components
-registerSvelteElement("c-button", Button, ["href", "label", "active"]);
+registerSvelteElement("c-button", Button, [
+  "href",
+  "label",
+  "arialabel",
+  "active",
+]);
 registerSvelteElement("c-indexcard", IndexCard, [
   "href",
   "title",
@@ -70,8 +77,14 @@ registerSvelteElement("b-header", BlockHeader, [
   "description",
   "layout",
 ]);
+registerSvelteElement("b-margin-header", BlockMarginHeader, [
+  "title",
+  "description",
+  "layout",
+]);
 registerSvelteElement("b-img", BlockImage, ["images", "spacing"]);
 registerSvelteElement("b-text", BlockText, ["columns", "items"]);
+registerSvelteElement("b-margin-text", BlockMarginText, ["columns", "items"]);
 registerSvelteElement("b-grid", BlockGrid, ["columns", "items"]);
 registerSvelteElement("b-fullbleed", BlockFullBleed, [
   "image",
