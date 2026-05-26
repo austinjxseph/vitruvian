@@ -86,7 +86,7 @@
         min-width: 1px;
     }
 
-    @media screen and (min-width: 1729px) {
+    @media screen and (min-width: 2160px) {
         .l-inner {
             grid-template-columns: repeat(3, 1fr);
         }

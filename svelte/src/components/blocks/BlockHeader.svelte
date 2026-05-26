@@ -87,7 +87,7 @@
         grid-column: span 2;
     }
 
-    @media screen and (min-width: 1729px) {
+    @media screen and (min-width: 2160px) {
         .header.is-row {
             grid-template-columns: repeat(6, 1fr);
         }
