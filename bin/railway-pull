@@ -88,7 +88,12 @@ for p in "${PATHS[@]}"; do
 done
 
 echo "==> Streaming ${PATHS[*]} from Railway..."
-railway ssh -- "tar ${REMOTE_TAR_ARGS[*]@Q}" \
+# `railway ssh` always allocates a TTY, which corrupts binary streams
+# (tar refuses to write to a TTY, and \n→\r\n line conversion would mangle
+# the archive). Base64 on the remote, strip \r locally, decode, then untar.
+railway ssh -- "tar ${REMOTE_TAR_ARGS[*]@Q} | base64" \
+    | tr -d '\r' \
+    | base64 -d \
     | tar -xf - -C "$TMP_DIR"
 
 for p in "${PATHS[@]}"; do

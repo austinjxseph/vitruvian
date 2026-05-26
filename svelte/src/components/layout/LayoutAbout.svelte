@@ -108,12 +108,7 @@
         }
 
         .col-img {
-            position: relative;
-            top: auto;
-            aspect-ratio: 4 / 3;
-            width: calc(100% - (var(--global--margin) * 2));
-            margin-left: var(--global--margin);
-            margin-right: var(--global--margin);
+            display: none;
         }
 
         .col-body :global(text-md) {

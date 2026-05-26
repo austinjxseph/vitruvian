@@ -1,10 +1,17 @@
 <script lang="ts">
     let { title = "", description = "", layout = "column" } = $props();
 
-    const strippedTitle = $derived(title.replace(/^<p>(.*)<\/p>$/s, "$1"));
-    const strippedDescription = $derived(
-        description.replace(/^<p>(.*)<\/p>$/s, "$1"),
-    );
+    // Strip wrapping <p> tags from Kirbytext output. For multi-paragraph
+    // content we collapse inner paragraph breaks to <br><br> first, otherwise
+    // a greedy outer strip leaves stray </p><p> in the middle — SplitText then
+    // wraps half the lines in <p> and they pick up different styles.
+    const normalizeKt = (s: string) =>
+        s
+            .replace(/<\/p>\s*<p>/g, "<br><br>")
+            .replace(/^<p>([\s\S]*)<\/p>$/, "$1");
+
+    const strippedTitle = $derived(normalizeKt(title));
+    const strippedDescription = $derived(normalizeKt(description));
 </script>
 
 <header class="header" class:is-row={layout === "row"}>

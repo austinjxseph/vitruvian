@@ -7,8 +7,15 @@
         items?: Array<{ heading?: string; content: string }>;
     } = $props();
 
+    // Kirbytext renders each paragraph as <p>…</p>. SplitText (data-motion-stagger)
+    // breaks on inline lines, so we collapse paragraph boundaries into <br><br>
+    // then strip the outer wrap. Without this, multi-paragraph content leaves
+    // stray <p> blocks that get nested inside .a-stagger lines and inherit
+    // different styles.
     const normalizeContent = (content = "") =>
-        content.replace(/^<p>(.*)<\/p>$/s, "$1");
+        content
+            .replace(/<\/p>\s*<p>/g, "<br><br>")
+            .replace(/^<p>([\s\S]*)<\/p>$/, "$1");
 </script>
 
 <section class="section">
