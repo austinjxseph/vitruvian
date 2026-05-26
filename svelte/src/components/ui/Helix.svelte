@@ -395,7 +395,7 @@
         }
     }
 
-    @media screen and (min-width: 2160px) {
+    @media screen and (min-width: 1729px) {
         :global(c-helix) {
             aspect-ratio: 1 / 1;
         }
