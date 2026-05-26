@@ -9,7 +9,7 @@ Created and attached a Railway volume for persistent Kirby content and Panel acc
 Production Panel edits were tied to the deploy container filesystem and could be overwritten by fresh Railway rebuilds from Git-tracked `content/`.
 
 ### What fixed it
-Created `vitruvian-volume` at `/var/www/html/persist`, added `bin/railway-start.sh` to seed and link `/content` and `/site/accounts`, updated the Dockerfile to use the startup script, ignored local backups/content/accounts, removed content/accounts from Git tracking, and verified a second deploy where the image had empty seed directories while the live site and Panel read from the mounted volume.
+Created `vitruvian-volume` at `/var/www/html/persist`, added `bin/railway-start` to seed and link `/content` and `/site/accounts`, updated the Dockerfile to use the startup script, ignored local backups/content/accounts, removed content/accounts from Git tracking, and verified a second deploy where the image had empty seed directories while the live site and Panel read from the mounted volume.
 
 ## About Image Border And Header Width (2026-05-17)
 

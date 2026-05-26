@@ -38,6 +38,85 @@ https://austinjxseph.me/panel  -> Panel HTML returned on GET
 
 The empty seed directories in the final image are expected. The production content and accounts now come from the mounted volume, not from the deployment image.
 
+## Post-Migration Fix: Symlink Ownership (2026-05-17)
+
+After the initial cutover the Kirby Panel rendered the installer screen on `/panel` even though the volume was healthy and pages served correctly.
+
+### Symptoms
+
+- `https://austinjxseph.me/` and child pages: HTTP 200, content visible.
+- `https://austinjxseph.me/panel` redirected to `/panel/installation`.
+- The installer view reported `requirements.content: false` despite `is_writable("/var/www/html/persist/content")` returning `true` for `www-data`.
+
+### Root cause
+
+`bin/railway-start` runs as `root` during boot, so the symlinks it created were owned `root:root`:
+
+```txt
+lrwxrwxrwx 1 root root /var/www/html/content       -> /var/www/html/persist/content
+lrwxrwxrwx 1 root root /var/www/html/site/accounts -> /var/www/html/persist/site/accounts
+```
+
+`/var/www/html` itself has mode `1777` (sticky bit set), and the kernel's `fs.protected_symlinks` guard refuses to let process A follow a symlink in a sticky directory when the symlink owner differs from both the directory owner and the process owner. So when Apache (`www-data`) called `stat("/var/www/html/content")` from the Panel's `System::status()`, the kernel returned `EACCES` and `is_writable()` reported `false`.
+
+Apache could still serve pages because page lookup `open()`s files through Kirby's own page loader, which the kernel allows; only the symlink-traversing `stat()` was blocked.
+
+### Fix
+
+Added one line to `bin/railway-start` after the `link_persistent_dir` calls so the symlinks are owned by the process that follows them:
+
+```sh
+chown -h www-data:www-data "$APP_ROOT/content" "$APP_ROOT/site/accounts"
+```
+
+### Verification
+
+After `railway up`:
+
+```txt
+lrwxrwxrwx 1 www-data www-data /var/www/html/content       -> /var/www/html/persist/content
+lrwxrwxrwx 1 www-data www-data /var/www/html/site/accounts -> /var/www/html/persist/site/accounts
+
+php -r 'echo is_writable("/var/www/html/content");'        -> true (as www-data)
+GET /panel                                                  -> 302 /panel/login
+```
+
+No data was touched; only symlink ownership changed.
+
+## Local Pull Workflow
+
+Once the volume is the source of truth for content, local design work needs a way to refresh `content/` from the live volume before starting a session.
+
+`bin/railway-pull` handles this. It tar-streams the live directories through `railway ssh` without requiring rsync on the remote.
+
+```sh
+bin/railway-pull              # content only
+bin/railway-pull --accounts   # content + site/accounts
+bin/railway-pull --dry-run    # preview without touching anything
+```
+
+Behaviour:
+
+1. Verifies `railway` CLI is logged in and the project is linked.
+2. Tars existing local `content/` (and `site/accounts/` if `--accounts`) into `backups/local-<timestamp>.tar.gz`.
+3. Streams `/var/www/html/persist/{content,site/accounts}` from the live container into a temp dir.
+4. Swaps the freshly-pulled dirs over the local ones only after the stream succeeds, so a failed pull never leaves a half-written `content/`.
+
+`media/` is intentionally not pulled — it is regenerable cache; Kirby will rebuild it on demand from `content/`.
+
+The script is one-way (pull) by design. A push the other direction (local → production) would risk clobbering live Panel edits, so any such operation should remain a deliberate, separate command.
+
+### Recommended workflow
+
+```txt
+bin/railway-pull           # before starting design / template / Svelte work
+# Edit code locally, run `php -S localhost:8000 router.php`
+git commit && git push     # code ships via Railway rebuild
+                           # the persistent volume is untouched
+```
+
+Do not commit pulled `content/`. It is the production source of truth on the volume, not in git.
+
 ## Current Problem
 
 The repository currently tracks `content/`, and the Docker image copies the whole repository into `/var/www/html`.
@@ -101,7 +180,7 @@ If Railway already contains newer live content than local Git, pull or export th
 Add a startup script, for example:
 
 ```txt
-bin/railway-start.sh
+bin/railway-start
 ```
 
 The script should:

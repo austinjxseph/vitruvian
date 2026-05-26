@@ -23,8 +23,10 @@ import LayoutHolding from "./components/layout/LayoutHolding.svelte";
 import Button from "./components/ui/Button.svelte";
 import IndexCard from "./components/ui/IndexCard.svelte";
 import Asterisk from "./components/ui/Asterisk.svelte";
+import Cube from "./components/ui/Cube.svelte";
 import Helix from "./components/ui/Helix.svelte";
 import Drum from "./components/ui/Drum.svelte";
+import Torus from "./components/ui/Torus.svelte";
 import Reel from "./components/ui/Reel.svelte";
 import Strip from "./components/ui/Strip.svelte";
 
@@ -66,8 +68,10 @@ registerSvelteElement("c-indexcard", IndexCard, [
   "overlayimage",
 ]);
 registerSvelteElement("c-asterisk", Asterisk, ["images"]);
+registerSvelteElement("c-cube", Cube, ["images"]);
 registerSvelteElement("c-helix", Helix, ["images"]);
 registerSvelteElement("c-drum", Drum, ["images"]);
+registerSvelteElement("c-torus", Torus, ["images"]);
 registerSvelteElement("c-reel", Reel, ["projects"]);
 registerSvelteElement("c-strip", Strip, ["projects"]);
 

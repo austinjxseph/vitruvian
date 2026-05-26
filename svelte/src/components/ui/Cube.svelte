@@ -28,6 +28,7 @@
         radius: 1.1,
         cardWidth: 1.65,
         cardHeight: 1.15,
+        facePadding: 0.12, // 0 = full face, 1 = no face. Gap around each plane so you can see through the cube.
         baseRotationSpeed: 0.003,
         portraitSpeedMultiplier: 1.0,
         tiltLoopSpeed: 0.005,
@@ -127,7 +128,8 @@
     onMount(() => {
         if (!images.length || !container) return;
 
-        const count = images.length;
+        // Cube has 6 faces — cycle through provided images
+        const FACE_COUNT = 6;
 
         let renderer: WebGLRenderer;
         let animationId: number;
@@ -178,14 +180,33 @@
 
         // Lighting handled per-fragment in the shader (matches Drum)
 
-        // Build meshes
+        // Build meshes — six square faces of a symmetrical cube
+        const half = config.radius;
+        const faceSize = config.radius * 2 * (1 - config.facePadding);
+
+        // [position, euler rotation] for each face, outward-facing
+        const faceTransforms: Array<{
+            pos: [number, number, number];
+            rot: [number, number, number];
+        }> = [
+            { pos: [half, 0, 0], rot: [0, Math.PI / 2, 0] }, // +X
+            { pos: [-half, 0, 0], rot: [0, -Math.PI / 2, 0] }, // -X
+            { pos: [0, half, 0], rot: [-Math.PI / 2, 0, 0] }, // +Y
+            { pos: [0, -half, 0], rot: [Math.PI / 2, 0, 0] }, // -Y
+            { pos: [0, 0, half], rot: [0, 0, 0] }, // +Z
+            { pos: [0, 0, -half], rot: [0, Math.PI, 0] }, // -Z
+        ];
+
         const geometry = new PlaneGeometry(1, 1);
         const textureLoader = new TextureLoader();
         const materials: ShaderMaterial[] = [];
         const textures: Texture[] = [];
+        const textureCache = new Map<string, Texture>();
 
-        for (let i = 0; i < count; i++) {
-            const tex = textureLoader.load(images[i].url, (loaded) => {
+        function getTexture(url: string): Texture {
+            const cached = textureCache.get(url);
+            if (cached) return cached;
+            const tex = textureLoader.load(url, (loaded) => {
                 if (loaded.image) {
                     const w = loaded.image.width || 1;
                     const h = loaded.image.height || 1;
@@ -197,14 +218,21 @@
             });
             tex.minFilter = LinearFilter;
             tex.magFilter = LinearFilter;
+            textureCache.set(url, tex);
             textures.push(tex);
+            return tex;
+        }
+
+        for (let i = 0; i < FACE_COUNT; i++) {
+            const image = images[i % images.length];
+            const tex = getTexture(image.url);
 
             const material = new ShaderMaterial({
                 uniforms: {
                     uTexture: { value: tex },
                     uImageRes: { value: new Vector2(1, 1) },
                     uPlaneSize: {
-                        value: new Vector2(config.cardWidth, config.cardHeight),
+                        value: new Vector2(faceSize, faceSize),
                     },
                     uLightDir: { value: new Vector3(0.7, 0.95, 1.2) },
                     uAmbientStrength: { value: 0.6 },
@@ -226,13 +254,10 @@
             materials.push(material);
 
             const mesh = new Mesh(geometry, material);
-            const angle = (i / count) * Math.PI * 2;
-            const x = Math.sin(angle) * config.radius;
-            const z = Math.cos(angle) * config.radius;
-
-            mesh.position.set(x, 0, z);
-            mesh.rotation.y = angle + Math.PI / 2;
-            mesh.scale.set(config.cardWidth, config.cardHeight, 1);
+            const { pos, rot } = faceTransforms[i];
+            mesh.position.set(pos[0], pos[1], pos[2]);
+            mesh.rotation.set(rot[0], rot[1], rot[2]);
+            mesh.scale.set(faceSize, faceSize, 1);
 
             mainGroup.add(mesh);
         }
@@ -338,6 +363,7 @@
             geometry.dispose();
             for (const mat of materials) mat.dispose();
             for (const tex of textures) tex.dispose();
+            textureCache.clear();
             materials.length = 0;
             textures.length = 0;
 
@@ -351,22 +377,22 @@
     });
 </script>
 
-<div class="star-container" bind:this={container}></div>
+<div class="cube-container" bind:this={container}></div>
 
 <style>
-    :global(c-asterisk) {
+    :global(c-cube) {
         display: block;
         width: 100%;
         height: 100%;
     }
 
-    .star-container {
+    .cube-container {
         width: 100%;
         height: 100%;
         position: relative;
     }
 
-    .star-container :global(canvas) {
+    .cube-container :global(canvas) {
         display: block;
         width: 100% !important;
         height: 100% !important;

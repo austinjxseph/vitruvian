@@ -48,7 +48,7 @@ COPY . /var/www/html/
 RUN mkdir -p /var/www/html/content-seed /var/www/html/site-accounts-seed \
     && if [ -d /var/www/html/content ]; then cp -a /var/www/html/content/. /var/www/html/content-seed/; fi \
     && if [ -d /var/www/html/site/accounts ]; then cp -a /var/www/html/site/accounts/. /var/www/html/site-accounts-seed/; fi \
-    && chmod +x /var/www/html/bin/railway-start.sh
+    && chmod +x /var/www/html/bin/railway-start
 
 # Install PHP dependencies
 RUN cd /var/www/html && composer install --no-dev --optimize-autoloader --no-interaction
@@ -60,4 +60,4 @@ RUN mkdir -p /var/www/html/media
 RUN chown -R www-data:www-data /var/www/html
 
 # Fix MPM conflict + set Railway $PORT at runtime, then start Apache
-CMD ["/var/www/html/bin/railway-start.sh"]
+CMD ["/var/www/html/bin/railway-start"]

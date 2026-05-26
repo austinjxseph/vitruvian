@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+#
+# Pulls the live Kirby content (and optionally site/accounts) from the
+# Railway persistent volume down to the local working tree.
+#
+# Usage:
+#   bin/railway-pull                # content only
+#   bin/railway-pull --accounts     # content + site/accounts
+#   bin/railway-pull --dry-run      # show what would happen
+#
+# Requires:
+#   - Railway CLI logged in and linked to vitruvian / production / vitruvian
+#     (`railway link` if not).
+#
+# Behaviour:
+#   - Tar-streams /var/www/html/persist/{content,site/accounts} from the live
+#     container via `railway ssh` (no rsync needed on remote).
+#   - Backs up the existing local content/ (and site/accounts/ if --accounts)
+#     to backups/local-<timestamp>.tar.gz before replacing.
+#   - Replaces local directories atomically (extract to tmp dir, then swap).
+#
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO_ROOT"
+
+INCLUDE_ACCOUNTS=0
+DRY_RUN=0
+for arg in "$@"; do
+    case "$arg" in
+        --accounts) INCLUDE_ACCOUNTS=1 ;;
+        --dry-run)  DRY_RUN=1 ;;
+        -h|--help)
+            sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
+            exit 0
+            ;;
+        *)
+            echo "unknown arg: $arg" >&2
+            exit 2
+            ;;
+    esac
+done
+
+if ! command -v railway >/dev/null 2>&1; then
+    echo "railway CLI not found in PATH" >&2
+    exit 1
+fi
+
+if ! railway status >/dev/null 2>&1; then
+    echo "railway is not linked — run \`railway link\` first" >&2
+    exit 1
+fi
+
+TS="$(date +%Y%m%d-%H%M%S)"
+BACKUP_DIR="$REPO_ROOT/backups"
+BACKUP_FILE="$BACKUP_DIR/local-$TS.tar.gz"
+TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/vitruvian-pull-XXXXXX")"
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+PATHS=("content")
+[ "$INCLUDE_ACCOUNTS" -eq 1 ] && PATHS+=("site/accounts")
+
+if [ "$DRY_RUN" -eq 1 ]; then
+    echo "[dry-run] would back up: ${PATHS[*]} -> $BACKUP_FILE"
+    echo "[dry-run] would pull:   /var/www/html/persist/{${PATHS[*]}} -> $REPO_ROOT/"
+    exit 0
+fi
+
+# Back up whatever exists locally so a bad pull is recoverable.
+mkdir -p "$BACKUP_DIR"
+TO_BACKUP=()
+for p in "${PATHS[@]}"; do
+    [ -e "$p" ] && TO_BACKUP+=("$p")
+done
+
+if [ "${#TO_BACKUP[@]}" -gt 0 ]; then
+    echo "==> Backing up ${TO_BACKUP[*]} -> $BACKUP_FILE"
+    tar -czf "$BACKUP_FILE" "${TO_BACKUP[@]}"
+else
+    echo "==> Nothing local to back up (${PATHS[*]} not present)"
+fi
+
+# Tar-stream from the live volume. Each top-level path is extracted into
+# a staging dir, then swapped in to replace the existing local dir.
+REMOTE_TAR_ARGS=("-C" "/var/www/html/persist" "-cf" "-")
+for p in "${PATHS[@]}"; do
+    REMOTE_TAR_ARGS+=("$p")
+done
+
+echo "==> Streaming ${PATHS[*]} from Railway..."
+railway ssh -- "tar ${REMOTE_TAR_ARGS[*]@Q}" \
+    | tar -xf - -C "$TMP_DIR"
+
+for p in "${PATHS[@]}"; do
+    if [ ! -d "$TMP_DIR/$p" ]; then
+        echo "remote returned nothing for $p — aborting swap" >&2
+        exit 1
+    fi
+    parent_dir="$REPO_ROOT/$(dirname "$p")"
+    mkdir -p "$parent_dir"
+    if [ -e "$REPO_ROOT/$p" ]; then
+        rm -rf "$REPO_ROOT/$p.old"
+        mv "$REPO_ROOT/$p" "$REPO_ROOT/$p.old"
+    fi
+    mv "$TMP_DIR/$p" "$REPO_ROOT/$p"
+    rm -rf "$REPO_ROOT/$p.old"
+    echo "==> Updated $p"
+done
+
+echo
+echo "Done. Local content reflects the live Railway volume."
+[ "${#TO_BACKUP[@]}" -gt 0 ] && echo "Previous local state archived at $BACKUP_FILE"

@@ -28,13 +28,7 @@
 <section class="section ab">
     <div class="container-xl py-lg pb-0">
         <div class="l-inner">
-            <div class="col-img">
-                {#if images.length}
-                    {@const helixId = "ab-helix"}
-                    <c-helix id={helixId}></c-helix>
-                    {@html `<script type="application/json" data-for="${helixId}">${JSON.stringify({ images })}<\/script>`}
-                {/if}
-            </div>
+            <div class="col-img"></div>
 
             <div class="col-body">
                 {#each items as item}
