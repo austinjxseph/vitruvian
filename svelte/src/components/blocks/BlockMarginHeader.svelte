@@ -5,12 +5,15 @@
     // content we collapse inner paragraph breaks to <br><br> first, otherwise
     // a greedy outer strip leaves stray </p><p> in the middle — SplitText then
     // wraps half the lines in <p> and they pick up different styles.
-    const normalizeKt = (s: string) =>
+    const normalizeKt = (s: string, br = "<br><br>") =>
         s
-            .replace(/<\/p>\s*<p>/g, "<br><br>")
+            .replace(/<\/p>\s*<p>/g, br)
             .replace(/^<p>([\s\S]*)<\/p>$/, "$1");
 
-    const strippedTitle = $derived(normalizeKt(title));
+    // Title honours each explicit line break from the writer field as a single
+    // <br>, so the editor controls where the heading wraps. Description keeps
+    // paragraph spacing (<br><br>) since it's body copy.
+    const strippedTitle = $derived(normalizeKt(title, "<br>"));
     const strippedDescription = $derived(normalizeKt(description));
 </script>
 
@@ -56,16 +59,6 @@
         color: var(--_themes---site--text--text-primary);
         font-weight: 400;
         margin: 0;
-    }
-
-    .heading {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        column-gap: var(--gap--md);
-    }
-
-    .heading h2 {
-        grid-column: span 2;
     }
 
     h2 :global(em) {
@@ -119,14 +112,6 @@
     @media screen and (max-width: 991px) {
         .header {
             gap: var(--gap--xxl);
-        }
-
-        .heading {
-            grid-template-columns: 1fr;
-        }
-
-        .heading h2 {
-            grid-column: 1;
         }
 
         .detail {

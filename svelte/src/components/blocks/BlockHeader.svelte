@@ -74,10 +74,6 @@
         }
     }
 
-    .heading {
-        max-width: 480px;
-    }
-
     .is-row .heading {
         grid-column: span 2;
         max-width: 36rem;
