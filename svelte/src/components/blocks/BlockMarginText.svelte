@@ -86,6 +86,31 @@
         margin: 0;
     }
 
+    /* Group-hover dim, mirroring the header overlay links: hovering a link
+       fades the rest of the block's copy so the link stays prominent.
+       Uses color (not opacity) since links sit inline within the text. */
+    .content {
+        transition: color 0.2s;
+    }
+
+    .content :global(a) {
+        color: inherit;
+        text-decoration: underline;
+        transition: color 0.2s;
+    }
+
+    .content:has(:global(a:hover)) {
+        color: color-mix(
+            in srgb,
+            var(--_themes---site--text--text-primary) 20%,
+            transparent
+        );
+    }
+
+    .content:has(:global(a:hover)) :global(a:hover) {
+        color: var(--_themes---site--text--text-primary);
+    }
+
     @media screen and (max-width: 991px) {
         .section {
             padding-bottom: var(--padding--sm);

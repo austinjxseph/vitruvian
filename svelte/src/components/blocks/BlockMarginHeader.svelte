@@ -51,7 +51,16 @@
         padding: var(--padding--md) var(--global--margin);
     }
 
+    /* Same 3-col grid as .detail so the heading's right edge
+       aligns with the body copy below (columns 1-2). */
+    .heading {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: var(--gap--md);
+    }
+
     h2 {
+        grid-column: span 2;
         font-family: var(--typeface--primary);
         font-size: var(--h2--font-size);
         line-height: var(--h2--line-height);
@@ -114,8 +123,16 @@
             gap: var(--gap--xxl);
         }
 
+        .heading,
         .detail {
             grid-template-columns: 1fr;
+        }
+
+        h2 {
+            grid-column: 1;
+        }
+
+        .detail {
             row-gap: var(--gap--sm);
             padding-top: var(--_units---abs--3);
         }
