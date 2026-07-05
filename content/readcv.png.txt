@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: xohtpuxos2pvijcd
-
-----
-
-Template: image

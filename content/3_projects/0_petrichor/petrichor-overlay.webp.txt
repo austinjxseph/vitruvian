@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: 9pm9qpixnwimfoca
-
-----
-
-Template: image

@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: dpg55sbvtmwvrrx6
-
-----
-
-Template: image

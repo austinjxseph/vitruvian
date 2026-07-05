@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: h25wddwkv0rducod
-
-----
-
-Template: image

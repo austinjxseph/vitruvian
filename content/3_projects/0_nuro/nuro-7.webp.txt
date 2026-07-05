@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: kvkeham0qfdelbbm
-
-----
-
-Template: image

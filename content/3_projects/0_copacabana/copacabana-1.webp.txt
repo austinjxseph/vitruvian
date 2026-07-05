@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: zjsmdpbunowvz7yc
-
-----
-
-Template: image

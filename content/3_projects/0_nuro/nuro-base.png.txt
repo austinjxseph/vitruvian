@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: inztaybd0zhqfkef
-
-----
-
-Template: image

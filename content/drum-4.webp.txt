@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: kp4martauregcpov
-
-----
-
-Template: image

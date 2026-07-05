@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: bdizmydzjamfbahv
-
-----
-
-Template: image

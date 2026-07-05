@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: rjpmzzdwmfl3xpzf
-
-----
-
-Template: image

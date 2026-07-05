@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: pcksidyekm93x8ud
-
-----
-
-Template: image

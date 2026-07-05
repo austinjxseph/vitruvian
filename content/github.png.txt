@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: phw1204mt6a23qts
-
-----
-
-Template: image

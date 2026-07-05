@@ -1,9 +1,0 @@
-Alt: 
-
-----
-
-Uuid: jmows3qaqmizxaqu
-
-----
-
-Template: image
