@@ -15,7 +15,13 @@
     const normalizeContent = (content = "") =>
         content
             .replace(/<\/p>\s*<p>/g, "<br><br>")
-            .replace(/^<p>([\s\S]*)<\/p>$/, "$1");
+            .replace(/^<p>([\s\S]*)<\/p>$/, "$1")
+            // Kirbytext links carry no target; margin-text links always
+            // point away from the reading flow, so open them in new tabs.
+            .replace(
+                /<a (?![^>]*\btarget=)/g,
+                '<a target="_blank" rel="noopener noreferrer" ',
+            );
 </script>
 
 <section class="section">
@@ -73,7 +79,8 @@
         justify-self: end;
         margin: 0;
         color: var(--_themes---site--text--text-secondary);
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        font-family:
+            ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
             "Liberation Mono", "Courier New", monospace;
         font-size: var(--paragraph--font-size-s);
         line-height: var(--paragraph--line-height-s);
@@ -90,13 +97,13 @@
        fades the rest of the block's copy so the link stays prominent.
        Uses color (not opacity) since links sit inline within the text. */
     .content {
-        transition: color 0.2s;
+        transition: color 120ms;
     }
 
     .content :global(a) {
         color: inherit;
-        text-decoration: underline;
-        transition: color 0.2s;
+        text-decoration: none;
+        transition: color 20ms;
     }
 
     .content:has(:global(a:hover)) {
